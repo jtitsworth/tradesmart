@@ -1,338 +1,385 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>TradeSmart</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-tailwind.config = {
-  darkMode: "class",
-  theme: {
-    extend: {
-      colors: {
-        "surface": "#0c0e12",
-        "surface-container-lowest": "#000000",
-        "surface-container-low": "#111318",
-        "surface-container": "#171a1f",
-        "surface-container-high": "#1d2025",
-        "surface-container-highest": "#23262c",
-        "surface-bright": "#292c32",
-        "on-surface": "#f6f6fc",
-        "on-surface-variant": "#aaabb0",
-        "outline-variant": "#46484d",
-        "outline": "#74757a",
-        "primary": "#6bfe9c",
-        "on-primary": "#005f2f",
-        "primary-container": "#1fc46a",
-        "secondary": "#5cb8fd",
-        "tertiary": "#ffe084",
-        "error": "#ff716c",
-        "error-dim": "#d7383b",
-        "rarity-common": "#808080",
-        "rarity-uncommon": "#2ECC71",
-        "rarity-rare": "#3498DB",
-        "rarity-epic": "#9B59B6",
-        "rarity-legendary": "#F1C40F",
-        "rarity-mythical": "#E74C3C"
-      },
-      borderRadius: {
-        "DEFAULT": "1rem",
-        "lg": "2rem",
-        "xl": "3rem",
-        "full": "9999px"
-      },
-      fontFamily: {
-        "headline": ["Space Grotesk","sans-serif"],
-        "body": ["Inter","sans-serif"],
-        "label": ["Inter","sans-serif"]
-      }
-    }
-  }
-}
-</script>
 <style>
-body { font-family:'Inter',sans-serif; background:#0c0e12; color:#f6f6fc; min-height:100dvh; }
-h1,h2,h3,h4,h5,h6,.font-headline { font-family:'Space Grotesk',sans-serif; }
-.badge-inner-glow { box-shadow: inset 0 1px 0 rgba(255,255,255,0.2); }
-.glow-mythical { box-shadow: 0 0 40px rgba(231,76,60,0.15); }
-.glow-legendary { box-shadow: 0 0 40px rgba(241,196,15,0.15); }
-.glow-epic { box-shadow: 0 0 40px rgba(155,89,182,0.15); }
-.glow-green { box-shadow: 0 0 30px rgba(107,254,156,0.3); }
-.page { display:none; }
-.page.active { display:flex; flex-direction:column; }
-.nav-item-active { background:#23262c; color:#6bfe9c; border-radius:1rem; box-shadow:0 0 15px rgba(107,254,156,0.15); transform:translateY(-2px); }
-.clip-path-curve { clip-path: polygon(0 100%, 15% 90%, 30% 70%, 50% 30%, 70% 15%, 85% 5%, 100% 0, 100% 100%); }
-.game-pill-active { background: linear-gradient(to right,#6bfe9c,#1fc46a); color:#005f2f; }
-.game-pill { background:#23262c; color:#6b7280; }
-.rng-tab-active { background:linear-gradient(to right,#6bfe9c,#1fc46a); color:#005f2f; }
-.rng-tab { color:#aaabb0; }
-.verdict-badge { box-shadow: 0 0 50px rgba(241,196,15,0.6), inset 0 0 20px rgba(241,196,15,0.2); }
+/* ===================== BASE ===================== */
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100dvh;font-family:var(--font-body);background:var(--bg);color:var(--on-surface);transition:background .3s,color .3s}
+.font-headline{font-family:var(--font-headline)}
+
+/* ===================== THEME TOKENS ===================== */
+/* BLOX FRUITS — Abyssal Voyager */
+[data-theme="blox"]{
+  --bg:#10141a; --surface:#10141a; --surface-low:#181c22; --surface-mid:#1c2026;
+  --surface-high:#262a31; --surface-highest:#31353c; --surface-bright:#353940;
+  --on-surface:#dfe2eb; --on-surface-dim:#9c8f7a; --on-surface-muted:#4f4634;
+  --primary:#ffd171; --primary-dark:#ebb328; --on-primary:#402d00;
+  --secondary:#accdcc; --tertiary:#ffccbe;
+  --font-headline:'Space Grotesk',sans-serif; --font-body:'Plus Jakarta Sans',sans-serif;
+  --radius-sm:2px; --radius-md:4px; --radius-lg:8px; --radius-pill:6px;
+  --btn-radius:4px; --card-radius:6px; --input-radius:2px;
+  --header-icon:anchor; --header-border:rgba(235,179,40,0.12);
+  --nav-active-bg:#ebb328; --nav-active-color:#10141a;
+  --evaluate-bg:linear-gradient(135deg,#ebb328,#ffd171);
+  --evaluate-color:#402d00;
+  --verdict-glow:rgba(255,209,113,0.5);
+}
+/* ADOPT ME — Velvet Orchard */
+[data-theme="adopt"]{
+  --bg:#fef8f3; --surface:#fef8f3; --surface-low:#f5ede4; --surface-mid:#edddd0;
+  --surface-high:#e8d5c4; --surface-highest:#dfc9b5; --surface-bright:#fff;
+  --on-surface:#35322d; --on-surface-dim:#7a7067; --on-surface-muted:#c4b5a5;
+  --primary:#9e3d62; --primary-dark:#7d2e4d; --on-primary:#fff;
+  --secondary:#006786; --tertiary:#735d07;
+  --font-headline:'Plus Jakarta Sans',sans-serif; --font-body:'Plus Jakarta Sans',sans-serif;
+  --radius-sm:12px; --radius-md:16px; --radius-lg:24px; --radius-pill:9999px;
+  --btn-radius:9999px; --card-radius:16px; --input-radius:9999px;
+  --header-icon:pets; --header-border:rgba(158,61,98,0.1);
+  --nav-active-bg:#9e3d62; --nav-active-color:#fff;
+  --evaluate-bg:linear-gradient(135deg,#9e3d62,#7d2e4d);
+  --evaluate-color:#fff;
+  --verdict-glow:rgba(158,61,98,0.3);
+}
+/* STEAL A BRAINROT — Digital Malfunction */
+[data-theme="brainrot"]{
+  --bg:#000; --surface:#000; --surface-low:#131313; --surface-mid:#1a1a1a;
+  --surface-high:#222; --surface-highest:#2c2c2c; --surface-bright:#333;
+  --on-surface:#fff; --on-surface-dim:#ababab; --on-surface-muted:#484848;
+  --primary:#8eff71; --primary-dark:#5ed44a; --on-primary:#000;
+  --secondary:#ff51fa; --tertiary:#00ffff;
+  --font-headline:'Space Grotesk',sans-serif; --font-body:'Space Grotesk',sans-serif;
+  --radius-sm:0px; --radius-md:0px; --radius-lg:0px; --radius-pill:0px;
+  --btn-radius:0px; --card-radius:0px; --input-radius:0px;
+  --header-icon:bolt; --header-border:rgba(142,255,113,0.2);
+  --nav-active-bg:#8eff71; --nav-active-color:#000;
+  --evaluate-bg:#8eff71;
+  --evaluate-color:#000;
+  --verdict-glow:rgba(142,255,113,0.4);
+}
+/* POKÉMON — Stadium Standard */
+[data-theme="pokemon"]{
+  --bg:#f9f9f9; --surface:#f9f9f9; --surface-low:#f0f0f0; --surface-mid:#e8e8e8;
+  --surface-high:#dde0e8; --surface-highest:#d0d3dc; --surface-bright:#fff;
+  --on-surface:#1a1c1c; --on-surface-dim:#5a5d6a; --on-surface-muted:#9da0ad;
+  --primary:#bc0100; --primary-dark:#8c0000; --on-primary:#fff;
+  --secondary:#3c4dcb; --tertiary:#6d5e00;
+  --font-headline:'Manrope',sans-serif; --font-body:'Plus Jakarta Sans',sans-serif;
+  --radius-sm:6px; --radius-md:12px; --radius-lg:20px; --radius-pill:9999px;
+  --btn-radius:9999px; --card-radius:12px; --input-radius:10px;
+  --header-icon:catching_pokemon; --header-border:rgba(188,1,0,0.1);
+  --nav-active-bg:#bc0100; --nav-active-color:#fff;
+  --evaluate-bg:linear-gradient(135deg,#bc0100,#8c0000);
+  --evaluate-color:#fff;
+  --verdict-glow:rgba(188,1,0,0.4);
+}
+
+/* ===================== SHARED COMPONENTS ===================== */
+.card{background:var(--surface-mid);border-radius:var(--card-radius);padding:1.25rem}
+.card-low{background:var(--surface-low);border-radius:var(--card-radius);padding:1.25rem}
+.input-field{background:var(--surface-high);border:none!important;border-radius:var(--input-radius);padding:.875rem 1rem;color:#1a1a1a;font-family:var(--font-body);width:100%;outline:none;font-size:14px;box-shadow:none!important;-webkit-appearance:none;appearance:none}
+.input-field::placeholder{color:#888}
+.input-field:focus{box-shadow:0 0 0 2px var(--primary)!important;border:none!important;outline:none!important;}
+.input-field:focus ~ .search-icon,.input-field:not(:placeholder-shown) ~ .search-icon{display:none}
+.input-wrap .search-icon{color:#888!important}
+.search-icon{pointer-events:none}
+.btn-primary{background:var(--evaluate-bg);color:var(--evaluate-color);border:none;border-radius:var(--btn-radius);padding:1rem 2rem;font-family:var(--font-headline);font-weight:900;font-size:1.1rem;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;transition:opacity .15s,transform .15s;width:100%}
+.btn-primary:hover{opacity:.9;transform:scale(1.01)}
+.btn-primary:active{transform:scale(.98)}
+.btn-secondary{background:var(--surface-high);color:var(--primary);border:1px solid var(--primary);border-radius:var(--btn-radius);padding:.6rem 1.2rem;font-family:var(--font-headline);font-weight:700;font-size:.75rem;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:all .15s}
+.btn-secondary:hover{background:var(--primary);color:var(--on-primary)}
+.rarity-badge{display:inline-block;padding:2px 8px;border-radius:var(--btn-radius);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.page{display:none;flex-direction:column;flex:1}
+.page.active{display:flex}
+[data-theme="brainrot"] .font-headline{text-transform:uppercase;letter-spacing:.05em}
+[data-theme="brainrot"] .card{border-top:2px solid var(--primary)}
+[data-theme="brainrot"] .btn-secondary{border-radius:0;border:2px solid var(--primary)}
+
+/* Scanline overlay for brainrot */
+[data-theme="brainrot"] body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:9999}
+
+/* Pokeball watermark for pokemon */
+[data-theme="pokemon"] .pokeball-bg::after{content:'';position:absolute;bottom:-20px;right:-20px;width:120px;height:120px;border-radius:50%;border:3px solid rgba(188,1,0,.06);pointer-events:none}
+
+/* Nav active states */
+.mobile-nav-btn.nav-active{background:var(--nav-active-bg);color:var(--nav-active-color);border-radius:var(--radius-md)}
+.top-nav-btn.nav-active{color:var(--primary);border-bottom:2px solid var(--primary)}
+.sidebar-nav-btn.nav-active{background:var(--surface-high);color:var(--primary)}
+
+/* game pill active */
+.game-pill-active{background:var(--primary)!important;color:var(--on-primary)!important;font-weight:700}
+.game-pill{background:var(--surface-high);color:var(--on-surface-dim)}
+
+/* Rarity colors — consistent across themes */
+.r-common{color:#808080}.r-uncommon{color:#2ECC71}.r-rare{color:#3498DB}
+.r-epic{color:#9B59B6}.r-legendary{color:#F1C40F}.r-mythical{color:#E74C3C}
+.bg-r-common{background:#808080}.bg-r-uncommon{background:#2ECC71}
+.bg-r-rare{background:#3498DB}.bg-r-epic{background:#9B59B6}
+.bg-r-legendary{background:#F1C40F}.bg-r-mythical{background:#E74C3C}
+
+/* RNG tab toggle */
+.rng-tab-active{background:var(--primary);color:var(--on-primary);font-weight:700}
+.rng-tab{color:var(--on-surface-dim)}
+
+/* combo pills */
+.combo-active{background:var(--primary);color:var(--on-primary);font-weight:700}
+.combo-pill{background:var(--surface-high);color:var(--on-surface-dim)}
+
+/* verdict badge */
+.verdict-box{border:2px solid var(--primary);background:var(--bg);border-radius:var(--card-radius);padding:1rem 2rem;text-align:center}
+
+/* luck result card colors */
+.luck-card{background:var(--surface-mid);border-radius:var(--card-radius);padding:2rem;text-align:center}
+
+/* mobile bottom padding */
+@media(max-width:768px){main{padding-bottom:6rem}}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--surface-low)}
+::-webkit-scrollbar-thumb{background:var(--primary);border-radius:2px}
 </style>
 </head>
-<body class="flex flex-col md:flex-row pb-24 md:pb-0 overflow-x-hidden">
+<body data-theme="blox">
 
 <!-- ===== DESKTOP SIDEBAR ===== -->
-<nav class="hidden md:flex fixed left-0 top-0 h-full w-64 z-40 bg-[#0c0e12] rounded-r-3xl shadow-2xl shadow-black/50 flex-col py-6">
-  <div class="px-6 mb-2 flex items-center gap-3">
-    <span class="material-symbols-outlined text-[#6bfe9c] text-3xl">account_balance_wallet</span>
-    <span class="font-headline text-xl font-black text-white tracking-tighter">TradeSmart</span>
+<nav id="sidebar" class="hidden md:flex fixed left-0 top-0 h-full w-60 z-40 flex-col py-6" style="background:var(--surface-low);border-right:1px solid var(--header-border)">
+  <div class="px-5 mb-6 flex items-center gap-3">
+    <span class="material-symbols-outlined" style="color:var(--primary)" id="sidebar-icon">anchor</span>
+    <span class="font-headline text-xl font-black" style="color:var(--primary)" id="sidebar-title">TradeSmart</span>
   </div>
-  <div class="px-6 mb-3 mt-4">
-    <p class="font-label font-medium uppercase tracking-widest text-[0.6875rem] text-[#6bfe9c]">Select Universe</p>
+  <div class="px-5 mb-3">
+    <p class="text-xs font-bold uppercase tracking-widest" style="color:var(--on-surface-dim)">Select Universe</p>
   </div>
-  <div class="flex flex-col gap-1 px-2" id="sidebar-games">
-    <button onclick="setGame('blox')" class="game-btn flex items-center gap-3 rounded-full mx-1 px-4 py-3 transition-all font-label font-medium uppercase tracking-widest text-[0.6875rem] game-pill-active" data-game="blox">
+  <div class="flex flex-col gap-1 px-3" id="sidebar-games">
+    <button onclick="setGame('blox')" class="game-btn flex items-center gap-3 rounded px-4 py-3 transition-all text-xs font-bold uppercase tracking-widest text-left game-pill-active" data-game="blox" style="border-radius:var(--radius-md)">
       <span class="material-symbols-outlined text-base shrink-0">sports_esports</span><span class="truncate">Blox Fruits</span>
     </button>
-    <button onclick="setGame('adopt')" class="game-btn flex items-center gap-3 rounded-full mx-1 px-4 py-3 transition-all font-label font-medium uppercase tracking-widest text-[0.6875rem] game-pill" data-game="adopt">
+    <button onclick="setGame('adopt')" class="game-btn flex items-center gap-3 px-4 py-3 transition-all text-xs font-bold uppercase tracking-widest text-left game-pill" data-game="adopt" style="border-radius:var(--radius-md)">
       <span class="material-symbols-outlined text-base shrink-0">pets</span><span class="truncate">Adopt Me</span>
     </button>
-    <button onclick="setGame('brainrot')" class="game-btn flex items-center gap-2 rounded-full mx-1 px-3 py-3 transition-all font-label font-medium uppercase tracking-widest text-[0.575rem] game-pill" data-game="brainrot">
+    <button onclick="setGame('brainrot')" class="game-btn flex items-center gap-3 px-4 py-3 transition-all text-xs font-bold uppercase tracking-widest text-left game-pill" data-game="brainrot" style="border-radius:var(--radius-md)">
       <span class="material-symbols-outlined text-base shrink-0">psychology</span><span class="truncate">Steal a Brainrot</span>
     </button>
-    <button onclick="setGame('pokemon')" class="game-btn flex items-center gap-3 rounded-full mx-1 px-4 py-3 transition-all font-label font-medium uppercase tracking-widest text-[0.6875rem] game-pill" data-game="pokemon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="shrink-0" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 2c3.37 0 6.28 1.67 8.1 4.24L4.24 14.1A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8zm0 16c-3.37 0-6.28-1.67-8.1-4.24l15.86-5.86C19.84 11.25 20 11.61 20 12c0 4.41-3.59 8-8 8zm-1-8a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/></svg><span class="truncate">Pokémon</span>
+    <button onclick="setGame('pokemon')" class="game-btn flex items-center gap-3 px-4 py-3 transition-all text-xs font-bold uppercase tracking-widest text-left game-pill" data-game="pokemon" style="border-radius:var(--radius-md)">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="shrink-0" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 2c3.37 0 6.28 1.67 8.1 4.24L4.24 14.1A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8zm0 16c-3.37 0-6.28-1.67-8.1-4.24l15.86-5.86C19.84 11.25 20 11.61 20 12c0 4.41-3.59 8-8 8zm-1-8a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/></svg>
+      <span class="truncate">Pokémon</span>
     </button>
   </div>
-  <div class="mt-auto px-4 pt-6 border-t border-white/5 mx-4">
-    <div class="flex flex-col gap-1">
-      <button onclick="showPage('marketplace')" class="sidebar-nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-[#23262c] hover:text-white transition-all font-body text-sm font-medium text-left" data-page="marketplace">
-        <span class="material-symbols-outlined text-base">storefront</span> Marketplace
-      </button>
-      <button onclick="showPage('evaluator')" class="sidebar-nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-[#23262c] hover:text-white transition-all font-body text-sm font-medium text-left" data-page="evaluator">
-        <span class="material-symbols-outlined text-base">compare_arrows</span> Trade Evaluator
-      </button>
-      <button onclick="showPage('rng')" class="sidebar-nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-[#23262c] hover:text-white transition-all font-body text-sm font-medium text-left" data-page="rng">
-        <span class="material-symbols-outlined text-base">casino</span> RNG Drops
-      </button>
-    </div>
+  <div class="mt-auto px-3 pt-6" style="border-top:1px solid var(--on-surface-muted)">
+    <button onclick="showPage('marketplace')" class="sidebar-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-medium text-left transition-all nav-active" data-page="marketplace" style="border-radius:var(--radius-md);color:var(--on-surface)">
+      <span class="material-symbols-outlined text-base">storefront</span> Marketplace
+    </button>
+    <button onclick="showPage('evaluator')" class="sidebar-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-medium text-left transition-all" data-page="evaluator" style="border-radius:var(--radius-md);color:var(--on-surface-dim)">
+      <span class="material-symbols-outlined text-base">compare_arrows</span> Trade Evaluator
+    </button>
+    <button onclick="showPage('rng')" class="sidebar-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-medium text-left transition-all" data-page="rng" style="border-radius:var(--radius-md);color:var(--on-surface-dim)">
+      <span class="material-symbols-outlined text-base">casino</span> RNG Drops
+    </button>
   </div>
 </nav>
 
-<!-- ===== MAIN CONTENT ===== -->
-<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- ===== MAIN ===== -->
+<div class="md:ml-60 flex flex-col min-h-screen">
 
-  <!-- TOP BAR -->
-  <header class="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-[#0c0e12]/90 backdrop-blur-lg border-b border-white/5">
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 flex justify-between items-center px-5 py-4" style="background:var(--bg);border-bottom:1px solid var(--header-border);backdrop-filter:blur(12px)">
     <div class="flex items-center gap-3">
-      <span class="material-symbols-outlined text-[#6bfe9c]">account_balance_wallet</span>
-      <span class="font-headline text-xl font-black text-[#6bfe9c] tracking-tighter">TradeSmart</span>
+      <span class="material-symbols-outlined" style="color:var(--primary)" id="header-icon">anchor</span>
+      <span class="font-headline text-xl font-black" style="color:var(--primary)">TradeSmart</span>
     </div>
-    <!-- Desktop top nav -->
-    <div class="hidden md:flex gap-2 items-center" id="top-nav">
-      <button onclick="showPage('marketplace')" class="top-nav-btn px-4 py-2 rounded-lg font-label text-sm font-medium text-gray-400 hover:bg-[#23262c] hover:text-white transition-all" data-page="marketplace">Marketplace</button>
-      <button onclick="showPage('evaluator')" class="top-nav-btn px-4 py-2 rounded-lg font-label text-sm font-medium text-gray-400 hover:bg-[#23262c] hover:text-white transition-all" data-page="evaluator">Evaluator</button>
-      <button onclick="showPage('rng')" class="top-nav-btn px-4 py-2 rounded-lg font-label text-sm font-medium text-gray-400 hover:bg-[#23262c] hover:text-white transition-all" data-page="rng">RNG Drops</button>
+    <div class="hidden md:flex gap-1 items-center" id="top-nav">
+      <button onclick="showPage('marketplace')" class="top-nav-btn px-4 py-2 text-sm font-bold transition-all nav-active" data-page="marketplace" style="color:var(--primary);border-bottom:2px solid var(--primary)">Marketplace</button>
+      <button onclick="showPage('evaluator')" class="top-nav-btn px-4 py-2 text-sm font-bold transition-all" data-page="evaluator" style="color:var(--on-surface-dim)">Evaluator</button>
+      <button onclick="showPage('rng')" class="top-nav-btn px-4 py-2 text-sm font-bold transition-all" data-page="rng" style="color:var(--on-surface-dim)">RNG Drops</button>
     </div>
-    <!-- Mobile game selector pills -->
-    <div class="flex md:hidden gap-2 overflow-x-auto" id="mobile-games">
-      <button onclick="setGame('blox')" class="game-btn-m shrink-0 px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest game-pill-active transition-all" data-game="blox">Blox Fruits</button>
-      <button onclick="setGame('adopt')" class="game-btn-m shrink-0 px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest game-pill transition-all" data-game="adopt">Adopt Me</button>
-      <button onclick="setGame('brainrot')" class="game-btn-m shrink-0 px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest game-pill transition-all" data-game="brainrot">Brainrot</button>
-      <button onclick="setGame('pokemon')" class="game-btn-m shrink-0 px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest game-pill transition-all" data-game="pokemon">Pokémon</button>
+    <div class="flex md:hidden gap-2 overflow-x-auto" id="mobile-games-header">
+      <button onclick="setGame('blox')" class="game-btn-h shrink-0 px-3 py-1.5 text-xs font-bold uppercase game-pill-active transition-all" data-game="blox" style="border-radius:var(--radius-pill)">Blox</button>
+      <button onclick="setGame('adopt')" class="game-btn-h shrink-0 px-3 py-1.5 text-xs font-bold uppercase game-pill transition-all" data-game="adopt" style="border-radius:var(--radius-pill)">Adopt</button>
+      <button onclick="setGame('brainrot')" class="game-btn-h shrink-0 px-3 py-1.5 text-xs font-bold uppercase game-pill transition-all" data-game="brainrot" style="border-radius:var(--radius-pill)">Brainrot</button>
+      <button onclick="setGame('pokemon')" class="game-btn-h shrink-0 px-3 py-1.5 text-xs font-bold uppercase game-pill transition-all" data-game="pokemon" style="border-radius:var(--radius-pill)">Pokémon</button>
     </div>
   </header>
 
-  <!-- ========== PAGE: MARKETPLACE ========== -->
-  <div id="page-marketplace" class="page active flex-1 p-4 md:p-8 max-w-3xl mx-auto w-full gap-6">
+  <!-- ======== MARKETPLACE PAGE ======== -->
+  <div id="page-marketplace" class="page active flex-1 p-4 md:p-8 max-w-3xl mx-auto w-full gap-5">
     <div>
-      <h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tighter mb-1">Live Trades</h1>
-      <p class="text-on-surface-variant font-body text-sm" id="market-subtitle">Real-time marketplace for Blox Fruits limiteds.</p>
+      <h1 class="font-headline text-4xl font-black mb-1" style="color:var(--on-surface)">Live Trades</h1>
+      <p class="text-sm" style="color:var(--on-surface-dim)" id="market-subtitle">Real-time marketplace for Blox Fruits limiteds.</p>
     </div>
-    <div class="flex items-center gap-3">
-      <button class="flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-full font-label text-sm font-bold hover:opacity-90 transition-opacity">
-        <span class="material-symbols-outlined text-base">add</span> POST A TRADE
+    <div class="flex items-center gap-3 flex-wrap">
+      <button class="btn-secondary flex items-center gap-2" style="padding:.6rem 1.2rem">
+        <span class="material-symbols-outlined text-sm">add</span> POST A TRADE
       </button>
     </div>
     <!-- Rarity filter -->
-    <div class="flex flex-col gap-3">
-      <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Filter by Rarity:</p>
+    <div class="flex flex-col gap-2">
+      <p class="text-xs font-bold uppercase tracking-widest" style="color:var(--on-surface-dim)">Filter by Rarity</p>
       <div class="flex flex-wrap gap-2">
-        <button class="px-3 py-1 rounded-full font-label text-xs font-bold border border-[#808080]/40 text-[#808080] hover:border-[#808080] transition-colors">Common</button>
-        <button class="px-3 py-1 rounded-full font-label text-xs font-bold border border-[#2ECC71]/40 text-[#2ECC71] hover:border-[#2ECC71] transition-colors">Uncommon</button>
-        <button class="px-3 py-1 rounded-full font-label text-xs font-bold border border-[#3498DB]/40 text-[#3498DB] hover:border-[#3498DB] transition-colors">Rare</button>
-        <button class="px-3 py-1 rounded-full font-label text-xs font-bold border border-[#9B59B6]/40 text-[#9B59B6] hover:border-[#9B59B6] transition-colors">Epic</button>
-        <button class="px-3 py-1 rounded-full font-label text-xs font-bold border-2 border-[#F1C40F] text-[#F1C40F]">Legendary</button>
-        <button class="px-3 py-1 rounded-full font-label text-xs font-bold border border-[#E74C3C]/40 text-[#E74C3C] hover:border-[#E74C3C] transition-colors">Mythical</button>
+        <button class="rarity-badge bg-r-common text-white">Common</button>
+        <button class="rarity-badge bg-r-uncommon text-white">Uncommon</button>
+        <button class="rarity-badge bg-r-rare text-white">Rare</button>
+        <button class="rarity-badge bg-r-epic text-white">Epic</button>
+        <button class="rarity-badge bg-r-legendary" style="color:#000">Legendary</button>
+        <button class="rarity-badge bg-r-mythical text-white">Mythical</button>
       </div>
     </div>
     <!-- Search -->
     <div class="relative">
-      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-base">search</span>
-      <input class="w-full bg-surface-container-lowest rounded-full py-3 pl-11 pr-4 text-on-surface font-body text-sm focus:ring-2 focus:ring-secondary/50 outline outline-1 outline-outline-variant/15 focus:outline-none transition-all placeholder:text-on-surface-variant/50" placeholder="Search items..." type="text"/>
+      <input class="input-field" placeholder="Search items..." type="text"/>
     </div>
-    <!-- Trade cards -->
-    <div class="flex flex-col gap-5" id="market-cards"></div>
+    <!-- Cards -->
+    <div class="flex flex-col gap-4" id="market-cards"></div>
   </div>
 
-  <!-- ========== PAGE: EVALUATOR ========== -->
-  <div id="page-evaluator" class="page flex-1 p-4 md:p-8 max-w-3xl mx-auto w-full gap-6">
+  <!-- ======== EVALUATOR PAGE ======== -->
+  <div id="page-evaluator" class="page flex-1 p-4 md:p-8 max-w-3xl mx-auto w-full gap-5">
     <div>
-      <h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tighter mb-1">Trade Evaluator</h1>
-      <p class="text-on-surface-variant font-body text-sm">Analyze values and determine fairness.</p>
+      <h1 class="font-headline text-4xl font-black mb-1" style="color:var(--on-surface)" id="eval-title">Trade Evaluator</h1>
+      <p class="text-sm" style="color:var(--on-surface-dim)" id="eval-subtitle">Analyze values and determine fairness.</p>
     </div>
-    <!-- Game pills (desktop sub-row) -->
+    <!-- Desktop game pills -->
     <div class="hidden md:flex gap-2 flex-wrap" id="eval-game-pills">
-      <button onclick="setGame('blox')" class="eval-gpill px-4 py-1.5 rounded-full font-label text-xs font-bold uppercase tracking-widest transition-all game-pill-active" data-game="blox">Blox Fruits</button>
-      <button onclick="setGame('adopt')" class="eval-gpill px-4 py-1.5 rounded-full font-label text-xs font-bold uppercase tracking-widest transition-all game-pill" data-game="adopt">Adopt Me</button>
-      <button onclick="setGame('brainrot')" class="eval-gpill px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest transition-all game-pill" data-game="brainrot">Steal a Brainrot</button>
-      <button onclick="setGame('pokemon')" class="eval-gpill px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest transition-all game-pill" data-game="pokemon">Pokémon</button>
+      <button onclick="setGame('blox')" class="eval-gpill px-4 py-1.5 text-xs font-bold uppercase tracking-widest transition-all game-pill-active" data-game="blox" style="border-radius:var(--radius-pill)">Blox Fruits</button>
+      <button onclick="setGame('adopt')" class="eval-gpill px-4 py-1.5 text-xs font-bold uppercase tracking-widest transition-all game-pill" data-game="adopt" style="border-radius:var(--radius-pill)">Adopt Me</button>
+      <button onclick="setGame('brainrot')" class="eval-gpill px-3 py-1.5 text-xs font-bold uppercase tracking-widest transition-all game-pill" data-game="brainrot" style="border-radius:var(--radius-pill)">Steal a Brainrot</button>
+      <button onclick="setGame('pokemon')" class="eval-gpill px-3 py-1.5 text-xs font-bold uppercase tracking-widest transition-all game-pill" data-game="pokemon" style="border-radius:var(--radius-pill)">Pokémon</button>
     </div>
     <!-- Two columns -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- YOU GIVE -->
-      <div class="flex flex-col gap-4 p-5 rounded-[1.5rem] bg-surface-container-low">
-        <h2 class="font-headline font-bold text-xl tracking-tight text-center">YOU GIVE</h2>
+      <div class="flex flex-col gap-4 p-5" style="background:var(--surface-low);border-radius:var(--card-radius)">
+        <h2 class="font-headline font-black text-xl text-center uppercase" style="color:var(--on-surface)" id="you-give-label">You Give</h2>
         <div class="relative">
-          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-base">search</span>
-          <input class="w-full bg-surface-container-lowest rounded-xl py-3 pl-11 pr-4 text-on-surface font-body text-sm focus:ring-2 focus:ring-secondary/50 outline outline-1 outline-outline-variant/15 focus:outline-none transition-all placeholder:text-on-surface-variant/50" placeholder="Search items to add..." type="text"/>
+          <input class="input-field" placeholder="Search items..." type="text"/>
         </div>
-        <div class="flex flex-col gap-3" id="you-give-items">
-          <!-- filled by JS -->
-        </div>
+        <div class="flex flex-col gap-3" id="you-give-items"></div>
       </div>
-      <!-- THEY GIVE -->
-      <div class="flex flex-col gap-4 p-5 rounded-[1.5rem] bg-surface-container-low">
-        <h2 class="font-headline font-bold text-xl tracking-tight text-center">THEY GIVE</h2>
+      <div class="flex flex-col gap-4 p-5" style="background:var(--surface-low);border-radius:var(--card-radius)">
+        <h2 class="font-headline font-black text-xl text-center uppercase" style="color:var(--on-surface)" id="they-give-label">They Give</h2>
         <div class="relative">
-          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-base">search</span>
-          <input class="w-full bg-surface-container-lowest rounded-xl py-3 pl-11 pr-4 text-on-surface font-body text-sm focus:ring-2 focus:ring-secondary/50 outline outline-1 outline-outline-variant/15 focus:outline-none transition-all placeholder:text-on-surface-variant/50" placeholder="Search items to add..." type="text"/>
+          <input class="input-field" placeholder="Search items..." type="text"/>
         </div>
-        <div class="flex flex-col gap-3" id="they-give-items">
-          <!-- filled by JS -->
-        </div>
+        <div class="flex flex-col gap-3" id="they-give-items"></div>
       </div>
     </div>
     <!-- Combo picker -->
     <div class="flex flex-col gap-2">
-      <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant text-center">Try a different combo</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-center" style="color:var(--on-surface-dim)">Try a different combo</p>
       <div class="flex flex-wrap gap-2 justify-center" id="combo-pills"></div>
     </div>
     <!-- Evaluate button -->
-    <div class="flex justify-center">
-      <button onclick="showVerdict()" class="px-10 py-4 bg-primary text-on-primary rounded-xl font-headline font-bold text-2xl tracking-tighter hover:scale-105 transition-transform glow-green">
-        EVALUATE TRADE
-      </button>
-    </div>
+    <button onclick="showVerdict()" class="btn-primary" id="evaluate-btn">EVALUATE TRADE</button>
     <!-- Verdict -->
-    <div id="verdict-area" class="hidden p-8 rounded-3xl bg-surface-container-low outline outline-1 outline-outline-variant/15 mt-2 relative overflow-visible">
-      <div class="absolute -top-8 left-1/2 -translate-x-1/2 z-20">
-        <div class="relative">
-          <div class="absolute inset-0 bg-rarity-legendary blur-[40px] opacity-40 rounded-full"></div>
-          <div class="px-8 py-4 rounded-2xl bg-[#0c0e12] border-2 border-rarity-legendary verdict-badge relative z-10 flex flex-col items-center">
-            <span class="font-headline font-black text-3xl tracking-tighter text-rarity-legendary drop-shadow-[0_0_10px_rgba(241,196,15,0.8)]">VERDICT: FAIR</span>
-            <p class="font-body text-sm font-bold text-primary mt-1">+0.5M Profit (W)</p>
-          </div>
+    <div id="verdict-area" class="hidden gap-4 flex-col relative" style="padding-top:2.5rem;margin-top:.5rem">
+      <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10" style="filter:drop-shadow(0 0 20px var(--verdict-glow))">
+        <div class="verdict-box">
+          <div class="font-headline font-black text-3xl" style="color:var(--primary)" id="verdict-label">VERDICT: FAIR</div>
+          <div class="text-sm font-bold mt-1" style="color:var(--secondary)" id="verdict-profit">+0.5M Profit (W)</div>
         </div>
       </div>
-      <div class="flex justify-around w-full gap-4 pt-8">
-        <div class="text-center bg-surface-container-highest p-5 rounded-2xl flex-1 relative overflow-hidden">
-          <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,#E74C3C_0%,transparent_70%)] opacity-10"></div>
-          <p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mb-2 relative z-10">You Give</p>
-          <p class="font-headline font-bold text-4xl text-on-surface relative z-10" id="you-total">21.5M</p>
+      <div class="grid grid-cols-2 gap-4 pt-8">
+        <div class="p-5 text-center relative overflow-hidden" style="background:var(--surface-mid);border-radius:var(--card-radius)">
+          <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color:var(--on-surface-dim)">You Give</p>
+          <p class="font-headline font-black text-4xl" style="color:var(--on-surface)" id="you-total">21.5M</p>
         </div>
-        <div class="text-center bg-surface-container-highest p-5 rounded-2xl flex-1 relative overflow-hidden">
-          <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,#9B59B6_0%,transparent_70%)] opacity-10"></div>
-          <p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mb-2 relative z-10">They Give</p>
-          <p class="font-headline font-bold text-4xl text-on-surface relative z-10" id="they-total">22.0M</p>
+        <div class="p-5 text-center relative overflow-hidden" style="background:var(--surface-mid);border-radius:var(--card-radius)">
+          <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color:var(--on-surface-dim)">They Give</p>
+          <p class="font-headline font-black text-4xl" style="color:var(--on-surface)" id="they-total">22.0M</p>
         </div>
       </div>
-      <div class="mt-5 p-4 rounded-2xl bg-surface-container-highest outline outline-1 outline-[#3498DB]/20 flex items-start gap-4">
-        <div class="w-10 h-10 rounded-full bg-[#3498DB]/10 flex items-center justify-center shrink-0 border border-[#3498DB]/30">
-          <span class="material-symbols-outlined text-[#3498DB] text-xl">smart_toy</span>
+      <div class="p-4 flex items-start gap-4" style="background:var(--surface-mid);border-radius:var(--card-radius);border:1px solid rgba(52,152,219,.2)">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="background:rgba(52,152,219,.1)">
+          <span class="material-symbols-outlined" style="color:#3498DB;font-size:20px">smart_toy</span>
         </div>
-        <p class="font-body text-sm text-on-surface-variant leading-relaxed pt-1" id="ai-analysis">
-          <strong class="text-on-surface font-bold">AI Analysis:</strong> The current demand for Mastery gamepasses is high, balancing the raw value of the fruits. While technically slightly in your favor by raw numbers, the liquidity of a gamepass makes this a highly recommended trade.
+        <p class="text-sm leading-relaxed pt-1" style="color:var(--on-surface-dim)" id="ai-analysis">
+          <strong style="color:var(--on-surface)">AI Analysis:</strong> Loading...
         </p>
       </div>
     </div>
   </div>
 
-  <!-- ========== PAGE: RNG ========== -->
-  <div id="page-rng" class="page flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full gap-6">
+  <!-- ======== RNG PAGE ======== -->
+  <div id="page-rng" class="page flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full gap-5">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tighter mb-1" id="rng-title">RNG Calculator</h1>
-        <p class="text-on-surface-variant font-body text-sm" id="rng-subtitle">Optimize your grinding strategy.</p>
+        <h1 class="font-headline text-4xl font-black mb-1" style="color:var(--on-surface)" id="rng-title">RNG Calculator</h1>
+        <p class="text-sm" style="color:var(--on-surface-dim)" id="rng-subtitle">Optimize your grinding strategy.</p>
       </div>
       <!-- Sub-mode toggle -->
-      <div class="flex bg-surface-container-low p-1 rounded-full outline outline-1 outline-outline-variant/15 self-start">
-        <button id="grind-tab" onclick="setRngMode('grind')" class="rng-tab-active px-5 py-2.5 rounded-full font-label text-sm font-bold transition-all">Should I Grind?</button>
-        <button id="luck-tab" onclick="setRngMode('luck')" class="rng-tab px-5 py-2.5 rounded-full font-label text-sm font-medium transition-all hover:text-on-surface">How Lucky Was I?</button>
+      <div class="flex p-1 self-start" style="background:var(--surface-low);border-radius:var(--radius-pill)">
+        <button id="grind-tab" onclick="setRngMode('grind')" class="rng-tab-active px-5 py-2.5 text-sm font-bold transition-all" style="border-radius:var(--radius-pill)">Should I Grind?</button>
+        <button id="luck-tab" onclick="setRngMode('luck')" class="rng-tab px-5 py-2.5 text-sm font-medium transition-all hover:opacity-80" style="border-radius:var(--radius-pill)">How Lucky Was I?</button>
       </div>
     </div>
 
     <!-- GRIND MODE -->
     <div id="grind-mode">
-      <div class="bg-surface-container-low p-5 rounded-xl outline outline-1 outline-outline-variant/15 mb-6">
-        <div class="relative w-full max-w-xl">
-          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-          <input class="w-full bg-surface-container-lowest rounded-full py-4 pl-12 pr-6 text-on-surface font-body text-lg focus:ring-2 focus:ring-secondary/50 outline outline-1 outline-outline-variant/15 focus:outline-none transition-all placeholder:text-on-surface-variant/50" placeholder="Search for item to grind..." type="text" value="Dragon Fruit" id="grind-search"/>
+      <div class="p-5 mb-5" style="background:var(--surface-low);border-radius:var(--card-radius)">
+        <div class="relative max-w-xl">
+          <input class="input-field" placeholder="Search for item to grind..." type="text" id="grind-search" value="Dragon Fruit"/>
         </div>
       </div>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="space-y-5 lg:col-span-1">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="space-y-4 lg:col-span-1">
           <!-- Stats card -->
-          <div class="bg-surface-container-highest p-6 rounded-[1.5rem] relative overflow-hidden outline outline-1 outline-outline-variant/15 hover:scale-[1.02] transition-all duration-300 glow-mythical">
-            <div class="absolute -inset-24 bg-[radial-gradient(ellipse_at_top_right,rgba(231,76,60,0.1),transparent)] pointer-events-none"></div>
+          <div class="p-6 relative overflow-hidden" style="background:var(--surface-mid);border-radius:var(--card-radius);border:1px solid rgba(231,76,60,.2)">
             <div class="flex items-center gap-3 mb-5 relative z-10">
-              <span class="material-symbols-outlined text-[#E74C3C] text-3xl">auto_awesome</span>
+              <span class="material-symbols-outlined" style="color:#E74C3C;font-size:28px">auto_awesome</span>
               <div>
-                <h3 class="font-headline text-2xl font-bold text-on-surface" id="grind-item-name">Dragon Fruit</h3>
-                <span class="inline-block bg-[#E74C3C] text-white px-2 py-0.5 rounded-full font-label text-[10px] uppercase tracking-widest mt-1 badge-inner-glow">Mythical Drop</span>
+                <h3 class="font-headline text-xl font-black" style="color:var(--on-surface)" id="grind-item-name">Dragon Fruit</h3>
+                <span class="rarity-badge bg-r-mythical text-white mt-1 inline-block" id="grind-rarity-badge">Mythical Drop</span>
               </div>
             </div>
-            <div class="space-y-4 relative z-10">
-              <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                <span class="font-label text-sm text-on-surface-variant uppercase tracking-wider">Base Rate</span>
-                <span class="font-headline font-bold text-lg text-secondary" id="grind-rate">0.1%</span>
+            <div class="space-y-3 relative z-10">
+              <div class="flex justify-between items-center pb-2" style="border-bottom:1px solid var(--on-surface-muted)">
+                <span class="text-xs font-bold uppercase tracking-wider" style="color:var(--on-surface-dim)">Base Rate</span>
+                <span class="font-headline font-bold text-lg" style="color:var(--secondary)" id="grind-rate">0.1%</span>
               </div>
-              <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                <span class="font-label text-sm text-on-surface-variant uppercase tracking-wider">Expected Attempts</span>
-                <span class="font-headline font-bold text-2xl text-on-surface" id="grind-attempts">1,000</span>
+              <div class="flex justify-between items-center pb-2" style="border-bottom:1px solid var(--on-surface-muted)">
+                <span class="text-xs font-bold uppercase tracking-wider" style="color:var(--on-surface-dim)">Expected Attempts</span>
+                <span class="font-headline font-black text-2xl" style="color:var(--on-surface)" id="grind-attempts">1,000</span>
               </div>
               <div class="flex justify-between items-center">
-                <span class="font-label text-sm text-on-surface-variant uppercase tracking-wider">Estimated Time</span>
-                <span class="font-headline font-bold text-xl text-tertiary" id="grind-time">~50 hrs</span>
+                <span class="text-xs font-bold uppercase tracking-wider" style="color:var(--on-surface-dim)">Estimated Time</span>
+                <span class="font-headline font-bold text-xl" style="color:var(--tertiary)" id="grind-time">~50 hrs</span>
               </div>
             </div>
           </div>
-          <!-- Verdict -->
-          <div class="bg-surface-container-low p-5 rounded-xl border-l-4 border-error-dim flex gap-4">
-            <span class="material-symbols-outlined text-error-dim text-2xl shrink-0">warning</span>
+          <!-- Verdict card -->
+          <div class="p-5 flex gap-4" style="background:var(--surface-low);border-radius:var(--card-radius);border-left:4px solid #E74C3C">
+            <span class="material-symbols-outlined shrink-0" style="color:#E74C3C;font-size:22px">warning</span>
             <div>
-              <h4 class="font-label font-bold text-sm text-on-surface mb-1 uppercase tracking-wider">Verdict</h4>
-              <p class="font-body text-sm text-on-surface-variant" id="grind-verdict">Extremely rare. Only grind if you have serious time to invest — consider trading instead.</p>
+              <h4 class="text-xs font-black uppercase tracking-wider mb-1" style="color:var(--on-surface)">Verdict</h4>
+              <p class="text-sm" style="color:var(--on-surface-dim)" id="grind-verdict">Extremely rare. Only grind if you have serious time to invest.</p>
             </div>
           </div>
         </div>
         <!-- Chart -->
         <div class="lg:col-span-2">
-          <div class="bg-surface-container-high p-6 rounded-xl h-full min-h-[280px] flex flex-col outline outline-1 outline-outline-variant/15">
-            <div class="flex justify-between items-center mb-1">
-              <h3 class="font-headline text-xl font-bold text-on-surface">Probability Curve</h3>
-              <span class="font-label text-xs text-on-surface-variant uppercase tracking-widest">Click a bar to inspect</span>
+          <div class="p-6 h-full flex flex-col" style="background:var(--surface-mid);border-radius:var(--card-radius);min-height:280px">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-headline text-lg font-black" style="color:var(--on-surface)">Probability Curve</h3>
+              <span class="text-xs font-bold uppercase tracking-widest" style="color:var(--on-surface-dim)">Click a bar</span>
             </div>
-            <!-- Selected bar readout -->
-            <div id="chart-readout" class="flex items-center gap-3 mb-4 h-8">
-              <span class="font-headline text-2xl font-bold text-primary" id="readout-pct">—</span>
-              <span class="font-body text-sm text-on-surface-variant" id="readout-label">chance after — attempts</span>
+            <div class="mb-4 h-8 flex items-center gap-3">
+              <span class="font-headline text-2xl font-black" style="color:var(--primary)" id="readout-pct">—</span>
+              <span class="text-sm" style="color:var(--on-surface-dim)" id="readout-label">chance after — attempts</span>
             </div>
-            <div class="flex-1 relative w-full flex items-end justify-between gap-1 pt-6 px-1" id="prob-bars" style="min-height:180px">
-              <!-- grid lines -->
-              <div class="absolute inset-0 flex flex-col justify-between py-6 opacity-10 pointer-events-none">
-                <div class="w-full h-px bg-white"></div>
-                <div class="w-full h-px bg-white"></div>
-                <div class="w-full h-px bg-white"></div>
-                <div class="w-full h-px bg-white"></div>
+            <div class="flex-1 relative w-full flex items-end justify-between gap-1 px-1" id="prob-bars" style="min-height:160px">
+              <div class="absolute inset-0 flex flex-col justify-between py-4 pointer-events-none" style="opacity:.08">
+                <div class="w-full" style="height:1px;background:var(--on-surface)"></div>
+                <div class="w-full" style="height:1px;background:var(--on-surface)"></div>
+                <div class="w-full" style="height:1px;background:var(--on-surface)"></div>
+                <div class="w-full" style="height:1px;background:var(--on-surface)"></div>
               </div>
-              <!-- bars injected by JS -->
             </div>
-            <div class="flex justify-between px-1 mt-3 text-[10px] font-label text-on-surface-variant uppercase tracking-widest" id="grind-chart-labels"></div>
-            <div class="text-center mt-1 text-[10px] font-label text-on-surface-variant/50 uppercase">Number of Attempts</div>
+            <div class="flex justify-between px-1 mt-3 text-xs font-bold uppercase tracking-widest" style="color:var(--on-surface-dim)" id="grind-chart-labels"></div>
+            <div class="text-center mt-1 text-xs uppercase" style="color:var(--on-surface-dim);opacity:.5">Number of Attempts</div>
           </div>
         </div>
       </div>
@@ -340,48 +387,45 @@ h1,h2,h3,h4,h5,h6,.font-headline { font-family:'Space Grotesk',sans-serif; }
 
     <!-- LUCK MODE -->
     <div id="luck-mode" class="hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div class="lg:col-span-5 flex flex-col gap-5">
-          <div class="bg-surface-container-low rounded-[1.5rem] p-6 outline outline-1 outline-outline-variant/15 flex flex-col gap-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <div class="lg:col-span-5 flex flex-col gap-4">
+          <div class="p-6 flex flex-col gap-5" style="background:var(--surface-low);border-radius:var(--card-radius)">
             <div class="flex flex-col gap-2">
-              <label class="text-xs font-label uppercase tracking-widest text-on-surface-variant ml-1">What did you get?</label>
-              <div class="bg-surface-container-lowest rounded-xl p-4 flex items-center gap-3 outline outline-1 outline-outline-variant/15 focus-within:outline-secondary/50 transition-all">
-                <span class="material-symbols-outlined text-secondary text-base">search</span>
-                <input class="bg-transparent border-none outline-none w-full text-on-surface font-body font-medium placeholder-on-surface-variant/50 focus:ring-0" placeholder="Search item..." type="text" id="luck-item"/>
+              <label class="text-xs font-bold uppercase tracking-widest" style="color:var(--on-surface-dim)">What did you get?</label>
+              <div class="relative">
+                <input class="input-field" placeholder="Search item..." type="text" id="luck-item"/>
               </div>
-              <!-- item suggestion chips -->
               <div class="flex flex-wrap gap-1.5 mt-1" id="luck-item-chips"></div>
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-xs font-label uppercase tracking-widest text-on-surface-variant ml-1">How many tries?</label>
-              <div class="bg-surface-container-lowest rounded-xl p-4 flex items-center gap-3 outline outline-1 outline-outline-variant/15 focus-within:outline-secondary/50 transition-all">
-                <span class="material-symbols-outlined text-secondary text-base">refresh</span>
-                <input class="bg-transparent border-none outline-none w-full text-on-surface font-body font-medium placeholder-on-surface-variant/50 focus:ring-0" placeholder="Enter attempts..." type="number" id="luck-tries" value="45"/>
+              <label class="text-xs font-bold uppercase tracking-widest" style="color:var(--on-surface-dim)">How many tries?</label>
+              <div class="relative">
+                <input class="input-field" placeholder="Enter attempts..." type="number" id="luck-tries" value="45"/>
               </div>
             </div>
-            <button onclick="calcLuck()" class="w-full bg-primary text-on-primary py-4 rounded-xl font-body font-bold text-lg hover:opacity-90 transition-opacity mt-1">Calculate Luck</button>
+            <button onclick="calcLuck()" class="btn-primary">Calculate Luck</button>
           </div>
         </div>
         <div class="lg:col-span-7">
-          <div id="luck-result" class="bg-surface-container-highest rounded-[1.5rem] p-8 relative overflow-hidden flex flex-col items-center text-center glow-legendary">
-            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(241,196,15,0.1),transparent_70%)] pointer-events-none"></div>
-            <div class="bg-rarity-legendary text-black px-4 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest mb-5 relative z-10 badge-inner-glow" id="luck-rarity-badge">Legendary Drop</div>
-            <h2 class="text-5xl md:text-7xl font-headline font-black text-rarity-legendary mb-6 relative z-10 tracking-tighter uppercase drop-shadow-[0_0_20px_rgba(241,196,15,0.5)]" id="luck-headline">Insane Luck!</h2>
-            <div class="grid grid-cols-2 gap-4 w-full relative z-10 mb-5">
-              <div class="bg-surface-container-low rounded-2xl p-5 outline outline-1 outline-outline-variant/15 flex flex-col items-center gap-2">
-                <span class="material-symbols-outlined text-secondary text-3xl mb-1">trending_up</span>
-                <span class="font-headline text-3xl font-bold text-on-surface" id="luck-percentile">Top 0.5%</span>
-                <span class="font-body text-sm text-on-surface-variant">of players</span>
+          <div id="luck-result" class="luck-card flex flex-col items-center gap-4 relative overflow-hidden" style="min-height:280px">
+            <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at center,var(--verdict-glow) 0,transparent 70%);opacity:.3"></div>
+            <div class="rarity-badge bg-r-legendary z-10 relative" style="color:#000;font-size:11px;padding:4px 14px;border-radius:var(--radius-pill)" id="luck-rarity-badge">Legendary Drop</div>
+            <h2 class="font-headline font-black z-10 relative uppercase tracking-tighter" style="font-size:3.5rem;line-height:1;color:var(--primary)" id="luck-headline">Insane Luck!</h2>
+            <div class="grid grid-cols-2 gap-4 w-full z-10 relative">
+              <div class="flex flex-col items-center gap-2 p-4" style="background:var(--surface-low);border-radius:var(--card-radius)">
+                <span class="material-symbols-outlined" style="color:var(--secondary);font-size:28px">trending_up</span>
+                <span class="font-headline text-2xl font-black" style="color:var(--on-surface)" id="luck-percentile">Top 0.5%</span>
+                <span class="text-xs" style="color:var(--on-surface-dim)">of players</span>
               </div>
-              <div class="bg-surface-container-low rounded-2xl p-5 outline outline-1 outline-outline-variant/15 flex flex-col items-center gap-2">
-                <span class="material-symbols-outlined text-primary text-3xl mb-1">casino</span>
-                <span class="font-headline text-3xl font-bold text-on-surface" id="luck-odds">1 in 8,000</span>
-                <span class="font-body text-sm text-on-surface-variant">rough attempts</span>
+              <div class="flex flex-col items-center gap-2 p-4" style="background:var(--surface-low);border-radius:var(--card-radius)">
+                <span class="material-symbols-outlined" style="color:var(--primary);font-size:28px">casino</span>
+                <span class="font-headline text-2xl font-black" style="color:var(--on-surface)" id="luck-odds">1 in 8,000</span>
+                <span class="text-xs" style="color:var(--on-surface-dim)">rough attempts</span>
               </div>
             </div>
-            <div class="bg-surface-container-lowest/50 rounded-xl p-4 w-full relative z-10 outline outline-1 outline-[#3498DB]/20">
-              <p class="font-body text-on-surface-variant text-sm" id="luck-context">
-                <strong class="text-secondary">Context:</strong> This is equivalent to flipping heads 13 times in a row.
+            <div class="w-full z-10 relative p-4" style="background:var(--surface-low);border-radius:var(--card-radius);border:1px solid rgba(52,152,219,.2)">
+              <p class="text-sm" style="color:var(--on-surface-dim)" id="luck-context">
+                <strong style="color:var(--secondary)">Context:</strong> This is equivalent to flipping heads 13 times in a row.
               </p>
             </div>
           </div>
@@ -390,28 +434,27 @@ h1,h2,h3,h4,h5,h6,.font-headline { font-family:'Space Grotesk',sans-serif; }
     </div>
   </div>
 
-</main>
+</div><!-- end main wrapper -->
 
-<!-- ===== MOBILE BOTTOM NAV ===== -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#0c0e12]/90 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] rounded-t-[2.5rem]">
-  <button onclick="showPage('marketplace')" class="mobile-nav-btn flex flex-col items-center justify-center px-6 py-2 transition-all text-gray-500" data-page="marketplace">
+<!-- MOBILE BOTTOM NAV -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4" style="background:var(--bg);border-top:1px solid var(--header-border);backdrop-filter:blur(16px)">
+  <button onclick="showPage('marketplace')" class="mobile-nav-btn flex flex-col items-center justify-center px-5 py-2 transition-all nav-active" data-page="marketplace" style="color:var(--primary)">
     <span class="material-symbols-outlined text-2xl mb-1">storefront</span>
-    <span class="font-label text-[10px] font-bold uppercase tracking-widest">Marketplace</span>
+    <span class="text-xs font-bold uppercase tracking-widest">Market</span>
   </button>
-  <button onclick="showPage('evaluator')" class="mobile-nav-btn flex flex-col items-center justify-center px-6 py-2 transition-all text-gray-500" data-page="evaluator">
+  <button onclick="showPage('evaluator')" class="mobile-nav-btn flex flex-col items-center justify-center px-5 py-2 transition-all" data-page="evaluator" style="color:var(--on-surface-dim)">
     <span class="material-symbols-outlined text-2xl mb-1">compare_arrows</span>
-    <span class="font-label text-[10px] font-bold uppercase tracking-widest">Evaluator</span>
+    <span class="text-xs font-bold uppercase tracking-widest">Evaluator</span>
   </button>
-  <button onclick="showPage('rng')" class="mobile-nav-btn flex flex-col items-center justify-center px-6 py-2 transition-all text-gray-500" data-page="rng">
+  <button onclick="showPage('rng')" class="mobile-nav-btn flex flex-col items-center justify-center px-5 py-2 transition-all" data-page="rng" style="color:var(--on-surface-dim)">
     <span class="material-symbols-outlined text-2xl mb-1">casino</span>
-    <span class="font-label text-[10px] font-bold uppercase tracking-widest">RNG Drops</span>
+    <span class="text-xs font-bold uppercase tracking-widest">RNG</span>
   </button>
 </nav>
 
 <script>
 // ===== IMAGE MAP =====
 const IMAGES = {
-  // Blox Fruits
   'Spirit Fruit':    '/public/blox fruit/Shadow_Fruit.png',
   'Venom Fruit':     '/public/blox fruit/Venom_Fruit.png',
   'Dragon Fruit':    '/public/blox fruit/Dragon_Fruit.png',
@@ -419,33 +462,29 @@ const IMAGES = {
   'Dough Fruit':     '/public/blox fruit/Dough_Fruit.png',
   'Buddha Fruit':    '/public/blox fruit/Buddha_Fruit.png',
   'Portal Fruit':    '/public/blox fruit/Kitsune_Fruit.png',
+  'Kitsune Fruit':   '/public/blox fruit/Kitsune_Fruit.png',
   'Blizzard Fruit':  '/public/blox fruit/Blizzard_Fruit.png',
   'Flame Fruit':     '/public/blox fruit/Flame_Fruit.png',
   'Ice Fruit':       '/public/blox fruit/Ice_Fruit.png',
   'Light Fruit':     '/public/blox fruit/Light_Fruit.png',
-  'Lightning Fruit': '/public/blox fruit/Lightning_Fruit.png',
+  'Shadow Fruit':    '/public/blox fruit/Shadow_Fruit.png',
   '2x Mastery':      null,
-  // Adopt Me
   'Shadow Dragon':   '/public/Adopt Me/ShadowDragon_Pet.png',
   'Frost Dragon':    '/public/Adopt Me/Frost_Dragon_Pet.png',
   'Bat Dragon':      '/public/Adopt Me/BatDragon_Pet.png',
   'Evil Unicorn':    '/public/Adopt Me/EvilUnicorn_Pet.png',
   'Parrot':          '/public/Adopt Me/Parrot_Pet.png',
-  'Dragon Pet':      '/public/Adopt Me/Dragon_Pet.png',
   'Crow':            '/public/Adopt Me/Crow_Pet.png',
   'Turtle':          '/public/Adopt Me/Turtle_Pet.png',
   'Owl':             '/public/Adopt Me/Owl_Pet.png',
   'Dog':             '/public/Adopt Me/Dog.png',
   'Cat':             '/public/Adopt Me/Cat_Icon.png',
-  // Steal a Brainrot
   'Tralalero Tralala':    '/public/Steal A Brainrot/TralalerTralala.png',
   'Bombardiro Crocodilo': '/public/Steal A Brainrot/Bombardiro_Crocodilo.png',
   'Tung Tung Tung Sahur': '/public/Steal A Brainrot/Tung_Tung_Tung_Sahur.png',
   'Capuccino Assassino':  '/public/Steal A Brainrot/Cappuccino_Assassino.png',
   'Lirilì Larilà':        '/public/Steal A Brainrot/Liliri_Lalira.png',
   'Brr Brr Patapim':      '/public/Steal A Brainrot/Cant_come_up_with_a_funny_joke_for_this_one.png',
-  'Lil Wayne':            '/public/Steal A Brainrot/Lil_wayne.png',
-  // Pokémon
   'Shiny Charizard': '/public/Pokemon/0006Charizard.png',
   'Charizard':       '/public/Pokemon/0006Charizard.png',
   'Mewtwo':          '/public/Pokemon/150Mewtwo.png',
@@ -463,782 +502,345 @@ const IMAGES = {
   'Tyranitar':       '/public/Pokemon/248Tyranitar.png',
   'Dragonite':       '/public/Pokemon/149Dragonite.png',
 };
+function getImg(name,size=52){const s=IMAGES[name];if(!s)return`<span style="font-size:${size*.7}px;line-height:1">🎮</span>`;return`<img src="${s}" alt="${name}" style="width:${size}px;height:${size}px;object-fit:contain" onerror="this.style.display='none'"/>`;}
 
-function getImg(name, size=52) {
-  const src = IMAGES[name];
-  if (!src) return `<span style="font-size:${size}px;line-height:1">🎮</span>`;
-  return `<img src="${src}" alt="${name}" style="width:${size}px;height:${size}px;object-fit:contain" onerror="this.style.display='none'"/>`;
-}
-
-// ===== DATA =====
-const GAMES = {
-  blox: {
-    label: 'Blox Fruits',
-    subtitle: 'Real-time marketplace for Blox Fruits limiteds.',
-    currency: 'M',
-    items: {
-      you: [
-        { name:'Spirit Fruit', rarity:'Mythical', rarityColor:'#E74C3C', value:'12.5M', emoji:'🍎' },
-        { name:'Venom Fruit', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'9.0M', emoji:'🍇' },
-      ],
-      they: [
-        { name:'2x Mastery', rarity:'Gamepass', rarityColor:'#9B59B6', value:'22.0M', emoji:'⭐' },
-      ]
-    },
-    trades: [
-      { user:'GamerPro123', valColor:'#E74C3C', val:'40M', have:{ name:'Leopard Fruit', rarity:'Mythical', color:'#E74C3C' }, want:{ name:'Dragon Fruit', rarity:'Mythical', color:'#E74C3C' }, glow:'glow-mythical' },
-      { user:'TradeKing99', valColor:'#F1C40F', val:'15M', have:{ name:'Dough Fruit', rarity:'Legendary', color:'#F1C40F', textColor:'black' }, want:{ name:'Any Offers', rarity:'Open', color:'#46484d' }, glow:'glow-legendary' },
-      { user:'NinjaTrader', valColor:'#9B59B6', val:'3.5M', have:{ name:'Portal Fruit', rarity:'Epic', color:'#9B59B6' }, want:{ name:'Buddha Fruit', rarity:'Legendary', color:'#F1C40F', textColor:'black' }, glow:'glow-epic' },
-    ],
-    grindItems: {
-      'Dragon Fruit': { rate:'0.1%', attempts:'1,000', time:'~50 hrs', verdict:'Extremely rare. Only grind if you have serious time to invest — consider trading instead.', rarity:'Mythical', rarityColor:'#E74C3C', labels:['200','500','800','1000','1500','2000','3000+'] },
-      'Dough Fruit':  { rate:'0.5%', attempts:'200', time:'~10 hrs', verdict:'High effort but achievable. Good value for the grind if you enjoy the game mode.', rarity:'Legendary', rarityColor:'#F1C40F', labels:['50','100','150','200','300','400','600+'] },
-      'Buddha Fruit': { rate:'2%', attempts:'50', time:'~2.5 hrs', verdict:'Worth it. Relatively accessible for a Legendary — most active players can get this in a day.', rarity:'Legendary', rarityColor:'#F1C40F', labels:['10','25','40','50','75','100','150+'] },
-    }
-  },
-  adopt: {
-    label: 'Adopt Me',
-    subtitle: 'Real-time marketplace for Adopt Me pets.',
-    currency: '',
-    items: {
-      you: [
-        { name:'Shadow Dragon', rarity:'Legendary', rarityColor:'#9B59B6', value:'12,000', emoji:'🐉' },
-        { name:'Frost Dragon', rarity:'Legendary', rarityColor:'#3498DB', rarityText:'white', value:'8,000', emoji:'❄️' },
-      ],
-      they: [
-        { name:'Bat Dragon', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'20,000', emoji:'🦇' },
-      ]
-    },
-    trades: [
-      { user:'PetQueen22', valColor:'#9B59B6', val:'12K', have:{ name:'Shadow Dragon', rarity:'Legendary', color:'#9B59B6' }, want:{ name:'Bat Dragon', rarity:'Legendary', color:'#F1C40F', textColor:'black' }, glow:'glow-epic' },
-      { user:'AdoptKing7', valColor:'#F1C40F', val:'8K', have:{ name:'Frost Dragon', rarity:'Legendary', color:'#3498DB' }, want:{ name:'Any Neon', rarity:'Open', color:'#46484d' }, glow:'glow-legendary' },
-      { user:'TradePro99', valColor:'#3498DB', val:'3K', have:{ name:'Evil Unicorn', rarity:'Legendary', color:'#F1C40F', textColor:'black' }, want:{ name:'Parrot', rarity:'Legendary', color:'#E74C3C' }, glow:'glow-mythical' },
-    ],
-    grindItems: {
-      'Shadow Dragon': { rate:'0.05%', attempts:'2,000', time:'Seasonal only', verdict:'Cannot be grinded — only obtainable during Halloween events. Trade is the only route.', rarity:'Legendary', rarityColor:'#9B59B6', labels:['500','1000','1500','2000','3000','4000','5000+'] },
-      'Frost Dragon':  { rate:'0.1%', attempts:'1,000', time:'Event only', verdict:'Event exclusive — monitor seasonal updates. Stock up on Robux when the event returns.', rarity:'Legendary', rarityColor:'#3498DB', labels:['200','500','800','1000','1500','2000','3000+'] },
-    }
-  },
-  brainrot: {
-    label: 'Steal a Brainrot',
-    subtitle: 'Real-time marketplace for Steal a Brainrot collectibles.',
-    currency: '',
-    items: {
-      you: [
-        { name:'Tralalero Tralala', rarity:'Mythical', rarityColor:'#E74C3C', value:'9,500', emoji:'🐟' },
-        { name:'Brr Brr Patapim', rarity:'Rare', rarityColor:'#3498DB', value:'2,200', emoji:'🌀' },
-      ],
-      they: [
-        { name:'Bombardiro Crocodilo', rarity:'Mythical', rarityColor:'#E74C3C', value:'11,000', emoji:'🐊' },
-      ]
-    },
-    trades: [
-      { user:'CapucinoFan', valColor:'#E74C3C', val:'9.5K', have:{ name:'Tralalero Tralala', rarity:'Mythical', color:'#E74C3C' }, want:{ name:'Bombardiro Crocodilo', rarity:'Mythical', color:'#E74C3C' }, glow:'glow-mythical' },
-      { user:'TungTung99', valColor:'#F1C40F', val:'5K', have:{ name:'Tung Tung Tung Sahur', rarity:'Legendary', color:'#F1C40F', textColor:'black' }, want:{ name:'Any Offers', rarity:'Open', color:'#46484d' }, glow:'glow-legendary' },
-      { user:'BombaTrader', valColor:'#9B59B6', val:'2.2K', have:{ name:'Capuccino Assassino', rarity:'Epic', color:'#9B59B6' }, want:{ name:'Lirilì Larilà', rarity:'Rare', color:'#3498DB' }, glow:'glow-epic' },
-    ],
-    grindItems: {
-      'Tralalero Tralala': { rate:'0.05%', attempts:'2,000', time:'~100 hrs', verdict:'Incredibly rare. The drop rate is punishing — experienced traders say it\'s faster to trade up than grind directly.', rarity:'Mythical', rarityColor:'#E74C3C', labels:['500','1000','1500','2000','3000','4000','5000+'] },
-      'Tung Tung Tung Sahur': { rate:'0.3%', attempts:'333', time:'~17 hrs', verdict:'Rough but doable. Weekend grind sessions can realistically land this one.', rarity:'Legendary', rarityColor:'#F1C40F', labels:['100','200','250','333','500','700','1000+'] },
-      'Brr Brr Patapim': { rate:'2%', attempts:'50', time:'~3 hrs', verdict:'Accessible. Solid item to grind for trading fodder toward higher-tier targets.', rarity:'Rare', rarityColor:'#3498DB', labels:['10','25','40','50','75','100','150+'] },
-    }
-  },
-  pokemon: {
-    label: 'Pokémon',
-    subtitle: 'Real-time marketplace for Pokémon trades.',
-    currency: '',
-    items: {
-      you: [
-        { name:'Shiny Charizard', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'Tier S', emoji:'🔥' },
-        { name:'Gengar', rarity:'Rare', rarityColor:'#9B59B6', value:'Tier B', emoji:'👻' },
-      ],
-      they: [
-        { name:'Mewtwo', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'Tier S', emoji:'🧬' },
-      ]
-    },
-    trades: [
-      { user:'AshKetchum', valColor:'#F1C40F', val:'Tier S', have:{ name:'Shiny Charizard', rarity:'Legendary', color:'#F1C40F', textColor:'black' }, want:{ name:'Mewtwo', rarity:'Legendary', color:'#F1C40F', textColor:'black' }, glow:'glow-legendary' },
-      { user:'MistyWater', valColor:'#3498DB', val:'Tier A', have:{ name:'Vaporeon', rarity:'Rare', color:'#3498DB' }, want:{ name:'Gengar', rarity:'Rare', color:'#9B59B6' }, glow:'glow-epic' },
-      { user:'BrockRocks', valColor:'#808080', val:'Tier C', have:{ name:'Magikarp', rarity:'Common', color:'#808080' }, want:{ name:'Gyarados', rarity:'Rare', color:'#3498DB' }, glow:'' },
-    ],
-    grindItems: {
-      'Mewtwo': { rate:'0.04%', attempts:'2,500', time:'Raid only', verdict:'Requires Raid Battles — set up a group, use your best Poké Balls, and pray. Timer resets monthly.', rarity:'Legendary', rarityColor:'#F1C40F', labels:['500','1000','1500','2000','2500','3500','5000+'] },
-      'Shiny Magikarp': { rate:'0.024%', attempts:'4,096', time:'~200 hrs', verdict:'Full odds shiny hunting is a serious time investment. Use Shiny Charm and chain methods to boost odds.', rarity:'Rare', rarityColor:'#3498DB', labels:['1000','2000','3000','4096','6000','8000','10000+'] },
-      'Garchomp': { rate:'5%', attempts:'20', time:'~1 hr', verdict:'Easy grind. Common in its habitat with good Poké Ball modifiers. Should take under an hour.', rarity:'Uncommon', rarityColor:'#2ECC71', labels:['5','10','15','20','30','40','60+'] },
-    }
-  }
+// ===== GAME DATA =====
+const GAMES={
+  blox:{label:'Blox Fruits',subtitle:'Real-time marketplace for Blox Fruits limiteds.',headerIcon:'anchor',evalTitle:'Trade Evaluator',evalSubtitle:'Analyze fruit values and determine fairness.',
+    items:{you:[{name:'Spirit Fruit',rarity:'Mythical',rarityClass:'r-mythical',rarityColor:'#E74C3C',value:'12.5M'},{name:'Venom Fruit',rarity:'Legendary',rarityClass:'r-legendary',rarityColor:'#F1C40F',rarityText:'black',value:'9.0M'}],they:[{name:'2x Mastery',rarity:'Gamepass',rarityClass:'r-epic',rarityColor:'#9B59B6',value:'22.0M'}]},
+    trades:[{user:'GamerPro123',valColor:'#E74C3C',val:'40M',have:{name:'Leopard Fruit',rarity:'Mythical',color:'#E74C3C'},want:{name:'Dragon Fruit',rarity:'Mythical',color:'#E74C3C'}},{user:'TradeKing99',valColor:'#F1C40F',val:'15M',have:{name:'Dough Fruit',rarity:'Legendary',color:'#F1C40F',textColor:'black'},want:{name:'Any Offers',rarity:'Open',color:'#46484d'}},{user:'NinjaTrader',valColor:'#9B59B6',val:'3.5M',have:{name:'Portal Fruit',rarity:'Epic',color:'#9B59B6'},want:{name:'Buddha Fruit',rarity:'Legendary',color:'#F1C40F',textColor:'black'}}],
+    grindItems:{'Dragon Fruit':{rate:'0.1%',attempts:'1,000',time:'~50 hrs',verdict:'Extremely rare. Only grind if you have serious time — consider trading instead.',rarity:'Mythical',rarityClass:'bg-r-mythical',rarityColor:'#E74C3C',labels:['200','500','800','1000','1500','2000','3000+']},'Dough Fruit':{rate:'0.5%',attempts:'200',time:'~10 hrs',verdict:'High effort but achievable. Good value if you enjoy the game mode.',rarity:'Legendary',rarityClass:'bg-r-legendary',rarityColor:'#F1C40F',labels:['50','100','150','200','300','400','600+']},'Buddha Fruit':{rate:'2%',attempts:'50',time:'~2.5 hrs',verdict:'Worth it. Accessible for a Legendary — most active players get this in a day.',rarity:'Legendary',rarityClass:'bg-r-legendary',rarityColor:'#F1C40F',labels:['10','25','40','50','75','100','150+']}}},
+  adopt:{label:'Adopt Me',subtitle:'Real-time marketplace for Adopt Me pets.',headerIcon:'pets',evalTitle:'Pet Trade Evaluator',evalSubtitle:'Find out if your pet trade is a W or an L.',
+    items:{you:[{name:'Shadow Dragon',rarity:'Legendary',rarityClass:'r-legendary',rarityColor:'#9B59B6',value:'12,000'},{name:'Frost Dragon',rarity:'Legendary',rarityClass:'r-rare',rarityColor:'#3498DB',value:'8,000'}],they:[{name:'Bat Dragon',rarity:'Legendary',rarityClass:'r-legendary',rarityColor:'#F1C40F',rarityText:'black',value:'20,000'}]},
+    trades:[{user:'PetQueen22',valColor:'#9B59B6',val:'12K',have:{name:'Shadow Dragon',rarity:'Legendary',color:'#9B59B6'},want:{name:'Bat Dragon',rarity:'Legendary',color:'#F1C40F',textColor:'black'}},{user:'AdoptKing7',valColor:'#F1C40F',val:'8K',have:{name:'Frost Dragon',rarity:'Legendary',color:'#3498DB'},want:{name:'Any Neon',rarity:'Open',color:'#46484d'}},{user:'TradePro99',valColor:'#3498DB',val:'3K',have:{name:'Evil Unicorn',rarity:'Legendary',color:'#F1C40F',textColor:'black'},want:{name:'Parrot',rarity:'Legendary',color:'#E74C3C'}}],
+    grindItems:{'Shadow Dragon':{rate:'0.05%',attempts:'2,000',time:'Seasonal only',verdict:'Cannot be grinded — only available during Halloween events. Trade is the only route.',rarity:'Legendary',rarityClass:'bg-r-legendary',rarityColor:'#9B59B6',labels:['500','1000','1500','2000','3000','4000','5000+']},'Frost Dragon':{rate:'0.1%',attempts:'1,000',time:'Event only',verdict:'Event exclusive — monitor seasonal updates. Stock up on Robux when it returns.',rarity:'Legendary',rarityClass:'bg-r-rare',rarityColor:'#3498DB',labels:['200','500','800','1000','1500','2000','3000+']}}},
+  brainrot:{label:'Steal a Brainrot',subtitle:'Real-time marketplace for Steal a Brainrot collectibles.',headerIcon:'bolt',evalTitle:'TRADE.EXE',evalSubtitle:'ANALYZE_TRADE // DETERMINE_FAIRNESS',
+    items:{you:[{name:'Tralalero Tralala',rarity:'Mythical',rarityClass:'r-mythical',rarityColor:'#E74C3C',value:'9,500'},{name:'Brr Brr Patapim',rarity:'Rare',rarityClass:'r-rare',rarityColor:'#3498DB',value:'2,200'}],they:[{name:'Bombardiro Crocodilo',rarity:'Mythical',rarityClass:'r-mythical',rarityColor:'#E74C3C',value:'11,000'}]},
+    trades:[{user:'CapucinoFan',valColor:'#E74C3C',val:'9.5K',have:{name:'Tralalero Tralala',rarity:'Mythical',color:'#E74C3C'},want:{name:'Bombardiro Crocodilo',rarity:'Mythical',color:'#E74C3C'}},{user:'TungTung99',valColor:'#F1C40F',val:'5K',have:{name:'Tung Tung Tung Sahur',rarity:'Legendary',color:'#F1C40F',textColor:'black'},want:{name:'Any Offers',rarity:'Open',color:'#46484d'}},{user:'BombaTrader',valColor:'#9B59B6',val:'2.2K',have:{name:'Capuccino Assassino',rarity:'Epic',color:'#9B59B6'},want:{name:'Lirilì Larilà',rarity:'Rare',color:'#3498DB'}}],
+    grindItems:{'Tralalero Tralala':{rate:'0.05%',attempts:'2,000',time:'~100 hrs',verdict:'INCREDIBLY_RARE. Drop rate is punishing — experienced traders say it\'s faster to trade up.',rarity:'Mythical',rarityClass:'bg-r-mythical',rarityColor:'#E74C3C',labels:['500','1000','1500','2000','3000','4000','5000+']},'Tung Tung Tung Sahur':{rate:'0.3%',attempts:'333',time:'~17 hrs',verdict:'ROUGH_BUT_DOABLE. Weekend grind sessions can realistically land this one.',rarity:'Legendary',rarityClass:'bg-r-legendary',rarityColor:'#F1C40F',labels:['100','200','250','333','500','700','1000+']},'Brr Brr Patapim':{rate:'2%',attempts:'50',time:'~3 hrs',verdict:'ACCESSIBLE. Solid item to grind for trading fodder toward higher-tier targets.',rarity:'Rare',rarityClass:'bg-r-rare',rarityColor:'#3498DB',labels:['10','25','40','50','75','100','150+']}}},
+  pokemon:{label:'Pokémon',subtitle:'Real-time marketplace for Pokémon trades.',headerIcon:'catching_pokemon',evalTitle:'Trade Evaluator',evalSubtitle:'Analyze Pokémon values across tiers.',
+    items:{you:[{name:'Shiny Charizard',rarity:'Legendary',rarityClass:'r-legendary',rarityColor:'#F1C40F',rarityText:'black',value:'Tier S'},{name:'Gengar',rarity:'Rare',rarityClass:'r-epic',rarityColor:'#9B59B6',value:'Tier B'}],they:[{name:'Mewtwo',rarity:'Legendary',rarityClass:'r-legendary',rarityColor:'#F1C40F',rarityText:'black',value:'Tier S'}]},
+    trades:[{user:'AshKetchum',valColor:'#F1C40F',val:'Tier S',have:{name:'Shiny Charizard',rarity:'Legendary',color:'#F1C40F',textColor:'black'},want:{name:'Mewtwo',rarity:'Legendary',color:'#F1C40F',textColor:'black'}},{user:'MistyWater',valColor:'#3498DB',val:'Tier A',have:{name:'Vaporeon',rarity:'Rare',color:'#3498DB'},want:{name:'Gengar',rarity:'Rare',color:'#9B59B6'}},{user:'BrockRocks',valColor:'#808080',val:'Tier C',have:{name:'Magikarp',rarity:'Common',color:'#808080'},want:{name:'Gyarados',rarity:'Rare',color:'#3498DB'}}],
+    grindItems:{'Mewtwo':{rate:'0.04%',attempts:'2,500',time:'Raid only',verdict:'Requires Raid Battles — set up a group, use your best Poké Balls, and pray.',rarity:'Legendary',rarityClass:'bg-r-legendary',rarityColor:'#F1C40F',labels:['500','1000','1500','2000','2500','3500','5000+']},'Shiny Magikarp':{rate:'0.024%',attempts:'4,096',time:'~200 hrs',verdict:'Full odds shiny hunting is serious. Use Shiny Charm and chain methods to boost odds.',rarity:'Rare',rarityClass:'bg-r-rare',rarityColor:'#3498DB',labels:['1000','2000','3000','4096','6000','8000','10000+']},'Garchomp':{rate:'5%',attempts:'20',time:'~1 hr',verdict:'Easy grind. Common in its habitat with good Poké Ball modifiers. Should take under an hour.',rarity:'Uncommon',rarityClass:'bg-r-uncommon',rarityColor:'#2ECC71',labels:['5','10','15','20','30','40','60+']}}}
 };
 
-let currentGame = 'blox';
-let currentPage = 'marketplace';
-let currentRngMode = 'grind';
+// ===== ALL ITEMS POOL =====
+const ALL_ITEMS={
+  blox:[{name:'Spirit Fruit',rarity:'Mythical',rarityColor:'#E74C3C',value:'12.5M'},{name:'Venom Fruit',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'9.0M'},{name:'2x Mastery',rarity:'Gamepass',rarityColor:'#9B59B6',value:'22.0M'},{name:'Dragon Fruit',rarity:'Mythical',rarityColor:'#E74C3C',value:'20.0M'},{name:'Leopard Fruit',rarity:'Mythical',rarityColor:'#E74C3C',value:'20.0M'},{name:'Dough Fruit',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'15.0M'},{name:'Buddha Fruit',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'5.0M'},{name:'Portal Fruit',rarity:'Epic',rarityColor:'#9B59B6',value:'3.5M'}],
+  adopt:[{name:'Shadow Dragon',rarity:'Legendary',rarityColor:'#9B59B6',value:'12,000'},{name:'Frost Dragon',rarity:'Legendary',rarityColor:'#3498DB',value:'8,000'},{name:'Bat Dragon',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'20,000'},{name:'Evil Unicorn',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'3,500'},{name:'Parrot',rarity:'Legendary',rarityColor:'#E74C3C',value:'4,000'}],
+  brainrot:[{name:'Tralalero Tralala',rarity:'Mythical',rarityColor:'#E74C3C',value:'9,500'},{name:'Brr Brr Patapim',rarity:'Rare',rarityColor:'#3498DB',value:'2,200'},{name:'Bombardiro Crocodilo',rarity:'Mythical',rarityColor:'#E74C3C',value:'11,000'},{name:'Tung Tung Tung Sahur',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'5,000'},{name:'Capuccino Assassino',rarity:'Epic',rarityColor:'#9B59B6',value:'1,000'},{name:'Lirilì Larilà',rarity:'Rare',rarityColor:'#3498DB',value:'1,000'}],
+  pokemon:[{name:'Shiny Charizard',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'Tier S'},{name:'Gengar',rarity:'Rare',rarityColor:'#9B59B6',value:'Tier B'},{name:'Mewtwo',rarity:'Legendary',rarityColor:'#F1C40F',rarityText:'black',value:'Tier S'},{name:'Vaporeon',rarity:'Rare',rarityColor:'#3498DB',value:'Tier A-'},{name:'Magikarp',rarity:'Common',rarityColor:'#808080',value:'Tier F'},{name:'Gyarados',rarity:'Rare',rarityColor:'#3498DB',value:'Tier B'}]
+};
+
+// ===== COMBOS =====
+const COMBOS={
+  blox:[{label:'Spirit + Venom → 2x Mastery',you:['Spirit Fruit','Venom Fruit'],they:['2x Mastery']},{label:'Spirit → Dragon',you:['Spirit Fruit'],they:['Dragon Fruit']},{label:'Spirit → Dough',you:['Spirit Fruit'],they:['Dough Fruit']},{label:'Venom → Buddha',you:['Venom Fruit'],they:['Buddha Fruit']},{label:'Venom → Portal',you:['Venom Fruit'],they:['Portal Fruit']},{label:'Dragon ↔ Leopard',you:['Dragon Fruit'],they:['Leopard Fruit']}],
+  adopt:[{label:'Shadow + Frost → Bat',you:['Shadow Dragon','Frost Dragon'],they:['Bat Dragon']},{label:'Shadow → Bat Dragon',you:['Shadow Dragon'],they:['Bat Dragon']},{label:'Shadow → Frost',you:['Shadow Dragon'],they:['Frost Dragon']},{label:'Frost → Bat Dragon',you:['Frost Dragon'],they:['Bat Dragon']},{label:'Evil Unicorn ↔ Parrot',you:['Evil Unicorn'],they:['Parrot']},{label:'Frost → Parrot',you:['Frost Dragon'],they:['Parrot']}],
+  brainrot:[{label:'Tralalero + Brr → Bombardiro',you:['Tralalero Tralala','Brr Brr Patapim'],they:['Bombardiro Crocodilo']},{label:'Tralalero → Bombardiro',you:['Tralalero Tralala'],they:['Bombardiro Crocodilo']},{label:'Tralalero → Tung Tung',you:['Tralalero Tralala'],they:['Tung Tung Tung Sahur']},{label:'Brr Brr → Capuccino',you:['Brr Brr Patapim'],they:['Capuccino Assassino']},{label:'Capuccino ↔ Lirilì',you:['Capuccino Assassino'],they:['Lirilì Larilà']},{label:'Tung Tung → Brr Brr',you:['Tung Tung Tung Sahur'],they:['Brr Brr Patapim']}],
+  pokemon:[{label:'Charizard + Gengar → Mewtwo',you:['Shiny Charizard','Gengar'],they:['Mewtwo']},{label:'Charizard ↔ Mewtwo',you:['Shiny Charizard'],they:['Mewtwo']},{label:'Charizard → Vaporeon',you:['Shiny Charizard'],they:['Vaporeon']},{label:'Gengar ↔ Vaporeon',you:['Gengar'],they:['Vaporeon']},{label:'Gengar → Magikarp',you:['Gengar'],they:['Magikarp']},{label:'Magikarp → Gyarados',you:['Magikarp'],they:['Gyarados']}]
+};
+
+// ===== VERDICTS =====
+const VERDICTS={
+  'blox|Spirit Fruit+Venom Fruit|2x Mastery':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'+0.5M Profit (W)',youVal:'21.5M',theyVal:'22.0M',analysis:'The current demand for Mastery gamepasses is high, balancing the raw value of the fruits. While technically slightly in your favor by raw numbers, the liquidity of a gamepass makes this a highly recommended trade.'},
+  'blox|Spirit Fruit|Dragon Fruit':{label:'VERDICT: L',labelColor:'#E74C3C',profitLine:'-7.5M Loss (L)',youVal:'12.5M',theyVal:'20.0M',analysis:'Dragon Fruit sits above Spirit Fruit in the current meta tier list. You\'re giving up significant value here — Dragon\'s combat utility commands a premium. Hold Spirit Fruit and trade up with additional items.'},
+  'blox|Spirit Fruit|Dough Fruit':{label:'VERDICT: L',labelColor:'#E74C3C',profitLine:'-2.5M Loss (L)',youVal:'12.5M',theyVal:'15.0M',analysis:'Dough Fruit is consistently valued higher due to its awakening potential. Spirit Fruit is solid but Dough\'s demand in the PvP scene keeps its price elevated.'},
+  'blox|Venom Fruit|Buddha Fruit':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+4.0M Profit (W)',youVal:'9.0M',theyVal:'5.0M',analysis:'Strong W. Venom Fruit is significantly more valuable than Buddha in the current market. Buddha is a grinder\'s fruit — widely available, low demand from traders.'},
+  'blox|Venom Fruit|Portal Fruit':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+5.5M Profit (W)',youVal:'9.0M',theyVal:'3.5M',analysis:'Massive W. Portal Fruit is an Epic tier item with limited PvP application. Venom\'s Legendary status and awakening capabilities put it well above.'},
+  'blox|Dragon Fruit|Leopard Fruit':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'±0 Even Trade',youVal:'20.0M',theyVal:'20.0M',analysis:'Both fruits sit at the very top of the Mythical tier. Dragon and Leopard trade at near-identical values in most community lists. This is a preference trade — take it if you need the switch.'},
+  'blox|Dough Fruit|Spirit Fruit':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+2.5M Profit (W)',youVal:'15.0M',theyVal:'12.5M',analysis:'Solid W. Dough commands a premium over Spirit in the current meta.'},
+  'blox|Portal Fruit|Buddha Fruit':{label:'VERDICT: L',labelColor:'#E74C3C',profitLine:'-1.5M Loss (L)',youVal:'3.5M',theyVal:'5.0M',analysis:'Slight L. Buddha Fruit has higher demand due to its grinding utility. Add a small item to even this out.'},
+  'adopt|Shadow Dragon+Frost Dragon|Bat Dragon':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'±0 Even Trade',youVal:'20,000',theyVal:'20,000',analysis:'Shadow Dragon and Frost Dragon together sit right at Bat Dragon\'s combined community value. All three are Halloween/event-limited legendaries with stable demand.'},
+  'adopt|Shadow Dragon|Bat Dragon':{label:'VERDICT: L',labelColor:'#E74C3C',profitLine:'-8,000 Loss (L)',youVal:'12,000',theyVal:'20,000',analysis:'Bat Dragon commands a significant premium over Shadow Dragon. You\'d need to add a Frost Dragon or two high-tier pets to make this anywhere near fair.'},
+  'adopt|Shadow Dragon|Frost Dragon':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+4,000 Profit (W)',youVal:'12,000',theyVal:'8,000',analysis:'Clean W. Shadow Dragon holds a noticeably higher value than Frost Dragon in current trading circles.'},
+  'adopt|Frost Dragon|Bat Dragon':{label:'VERDICT: L',labelColor:'#E74C3C',profitLine:'-12,000 Loss (L)',youVal:'8,000',theyVal:'20,000',analysis:'Hard L. Bat Dragon is one of the most valuable pets in the game — Frost Dragon alone doesn\'t come close.'},
+  'adopt|Evil Unicorn|Parrot':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'+500 Slight W',youVal:'3,500',theyVal:'4,000',analysis:'Both are older limited-edition pets with stable collector value. Parrot edges out Evil Unicorn slightly in most value lists.'},
+  'adopt|Frost Dragon|Parrot':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+4,000 Profit (W)',youVal:'8,000',theyVal:'4,000',analysis:'Strong W. Frost Dragon sits in a higher tier than Parrot despite both being event exclusives.'},
+  'brainrot|Tralalero Tralala+Brr Brr Patapim|Bombardiro Crocodilo':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'+700 Slight W',youVal:'11,700',theyVal:'11,000',analysis:'TRALALERO + BRR_BRR just about equals BOMBARDIRO\'s value. The Crocodilo has high demand right now due to meme virality — slight edge in your favor.'},
+  'brainrot|Tralalero Tralala|Bombardiro Crocodilo':{label:'VERDICT: L',labelColor:'#E74C3C',profitLine:'-1,500 Loss (L)',youVal:'9,500',theyVal:'11,000',analysis:'BOMBARDIRO_CROCODILO is riding a wave of meme popularity which has inflated its price above TRALALERO. The gap is real — add a BRR_BRR to close it.'},
+  'brainrot|Tralalero Tralala|Tung Tung Tung Sahur':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+4,500 Profit (W)',youVal:'9,500',theyVal:'5,000',analysis:'BIG_W. TRALALERO sits in the Mythical tier while TUNG_TUNG is Legendary — that rarity gap is directly reflected in market values.'},
+  'brainrot|Brr Brr Patapim|Capuccino Assassino':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+1,200 Profit (W)',youVal:'2,200',theyVal:'1,000',analysis:'SOLID_W. BRR_BRR is a higher rarity tier with stronger demand than CAPUCCINO_ASSASSINO.'},
+  'brainrot|Capuccino Assassino|Lirilì Larilà':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'±0 Even Trade',youVal:'1,000',theyVal:'1,000',analysis:'BOTH_EQUAL. Both items sit at the same tier — pure preference swap. No value edge either way.'},
+  'brainrot|Tung Tung Tung Sahur|Brr Brr Patapim':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'+2,800 Profit (W)',youVal:'5,000',theyVal:'2,200',analysis:'STRONG_W. TUNG_TUNG_TUNG is a Legendary — the rarity gap is meaningful. Take it if you want liquidity.'},
+  'pokemon|Shiny Charizard+Gengar|Mewtwo':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'Tier S + B = S Even',youVal:'Tier S + B',theyVal:'Tier S',analysis:'Shiny Charizard alone nearly matches Mewtwo, and Gengar tips this slightly in the other trainer\'s favour. Charizard\'s collector demand often exceeds raw tier ratings. Both sides have bragging rights.'},
+  'pokemon|Shiny Charizard|Mewtwo':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'Tier S for Tier S',youVal:'Tier S',theyVal:'Tier S',analysis:'Shiny Charizard and Mewtwo are both pinnacle Tier S Pokémon — Charizard wins on collector nostalgia, Mewtwo wins on competitive viability. Pull the trigger if you need the switch.'},
+  'pokemon|Shiny Charizard|Vaporeon':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'Tier S → Tier A (W)',youVal:'Tier S',theyVal:'Tier A',analysis:'Clear W. Shiny Charizard\'s rarity and cultural cachet put it above Vaporeon by at least a full tier. Don\'t make this trade unless you have a very specific team comp need.'},
+  'pokemon|Gengar|Vaporeon':{label:'VERDICT: FAIR',labelColor:'#F1C40F',profitLine:'Tier B ≈ Tier A-',youVal:'Tier B',theyVal:'Tier A-',analysis:'Close call. Gengar\'s Ghost typing and competitive utility make it a staple, while Vaporeon serves different needs. Community lists have these within one sub-tier of each other.'},
+  'pokemon|Gengar|Magikarp':{label:'VERDICT: W',labelColor:'#6bfe9c',profitLine:'Tier B → Tier F (W)',youVal:'Tier B',theyVal:'Tier F',analysis:'Absolute W. Magikarp is the most common Pokémon with a catch rate of 255/255. Unless this Magikarp is shiny, this trade is heavily in your favour.'},
+  'pokemon|Magikarp|Gyarados':{label:'VERDICT: L',labelColor:'#E74C3C',profitLine:'Tier F → Tier B (L)',youVal:'Tier F',theyVal:'Tier B',analysis:'L on paper, but remember — you can evolve Magikarp into Gyarados yourself. If you\'re short on time or candy, trading up makes sense.'}
+};
+
+let currentGame='blox',currentPage='marketplace',currentRngMode='grind';
 
 // ===== NAVIGATION =====
-function showPage(page) {
-  currentPage = page;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-
-  // top nav highlight
-  document.querySelectorAll('.top-nav-btn').forEach(b => {
-    b.classList.toggle('text-[#6bfe9c]', b.dataset.page === page);
-    b.classList.toggle('border-b-2', b.dataset.page === page);
-    b.classList.toggle('border-[#6bfe9c]', b.dataset.page === page);
-    b.classList.toggle('text-gray-400', b.dataset.page !== page);
+function showPage(p){
+  currentPage=p;
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.top-nav-btn').forEach(b=>{
+    const a=b.dataset.page===p;
+    b.classList.toggle('nav-active',a);
+    b.style.color=a?'var(--primary)':'var(--on-surface-dim)';
+    b.style.borderBottom=a?'2px solid var(--primary)':'2px solid transparent';
   });
-
-  // sidebar nav highlight
-  document.querySelectorAll('.sidebar-nav-btn').forEach(b => {
-    b.classList.toggle('bg-[#23262c]', b.dataset.page === page);
-    b.classList.toggle('text-[#6bfe9c]', b.dataset.page === page);
-    b.classList.toggle('text-gray-400', b.dataset.page !== page);
+  document.querySelectorAll('.sidebar-nav-btn').forEach(b=>{
+    const a=b.dataset.page===p;
+    b.classList.toggle('nav-active',a);
+    b.style.color=a?'var(--primary)':'var(--on-surface-dim)';
+    b.style.background=a?'var(--surface-high)':'transparent';
   });
-
-  // mobile nav highlight
-  document.querySelectorAll('.mobile-nav-btn').forEach(b => {
-    if(b.dataset.page === page) {
-      b.classList.add('nav-item-active', 'text-[#6bfe9c]');
-      b.classList.remove('text-gray-500');
-    } else {
-      b.classList.remove('nav-item-active', 'text-[#6bfe9c]');
-      b.classList.add('text-gray-500');
-    }
+  document.querySelectorAll('.mobile-nav-btn').forEach(b=>{
+    const a=b.dataset.page===p;
+    b.classList.toggle('nav-active',a);
+    b.style.color=a?'var(--nav-active-color)':'var(--on-surface-dim)';
+    b.style.background=a?'var(--nav-active-bg)':'transparent';
+    b.style.borderRadius=a?'var(--radius-md)':'0';
   });
 }
 
-function setGame(game) {
-  currentGame = game;
-  const g = GAMES[game];
-
-  // sidebar pills
-  document.querySelectorAll('.game-btn').forEach(b => {
-    b.classList.toggle('game-pill-active', b.dataset.game === game);
-    b.classList.toggle('game-pill', b.dataset.game !== game);
+function setGame(g){
+  currentGame=g;
+  document.body.dataset.theme=g;
+  const gd=GAMES[g];
+  // Update all game pill selectors
+  ['game-btn','game-btn-h','eval-gpill'].forEach(cls=>{
+    document.querySelectorAll('.'+cls).forEach(b=>{
+      const a=b.dataset.game===g;
+      b.classList.toggle('game-pill-active',a);
+      b.classList.toggle('game-pill',!a);
+      b.style.background=a?'var(--primary)':'var(--surface-high)';
+      b.style.color=a?'var(--on-primary)':'var(--on-surface-dim)';
+      b.style.borderRadius='var(--radius-pill)';
+    });
   });
-  // mobile pills
-  document.querySelectorAll('.game-btn-m').forEach(b => {
-    b.classList.toggle('game-pill-active', b.dataset.game === game);
-    b.classList.toggle('game-pill', b.dataset.game !== game);
+  // Update sidebar game btns border-radius per theme
+  document.querySelectorAll('.game-btn').forEach(b=>{
+    b.style.borderRadius='var(--radius-md)';
   });
-  // eval pills
-  document.querySelectorAll('.eval-gpill').forEach(b => {
-    b.classList.toggle('game-pill-active', b.dataset.game === game);
-    b.classList.toggle('game-pill', b.dataset.game !== game);
+  // Subtitle + header icon
+  document.getElementById('market-subtitle').textContent=gd.subtitle;
+  document.getElementById('eval-title').textContent=gd.evalTitle;
+  document.getElementById('eval-subtitle').textContent=gd.evalSubtitle;
+  // Header icons
+  ['header-icon','sidebar-icon'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(g==='pokemon'){
+      el.outerHTML=`<svg id="${id}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="color:var(--primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 2c3.37 0 6.28 1.67 8.1 4.24L4.24 14.1A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8zm0 16c-3.37 0-6.28-1.67-8.1-4.24l15.86-5.86C19.84 11.25 20 11.61 20 12c0 4.41-3.59 8-8 8zm-1-8a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/></svg>`;
+    } else {
+      el.outerHTML=`<span class="material-symbols-outlined" id="${id}" style="color:var(--primary)">${gd.headerIcon}</span>`;
+    }
   });
-
-  document.getElementById('market-subtitle').textContent = g.subtitle;
   renderMarket();
   renderEvaluator();
   renderGrindDefault();
-  if (currentRngMode === 'luck') renderLuckChips();
+  if(currentRngMode==='luck')renderLuckChips();
 }
 
-// ===== MARKET CARDS =====
-function rarityTextColor(r) { return r === 'Legendary' || r === 'Common' || r === 'Open' ? 'black' : 'white'; }
-
-function tradeCard(t) {
-  const wantImg = t.want.name === 'Any Offers' || t.want.name === 'Any Neon'
-    ? `<span class="material-symbols-outlined text-4xl text-gray-500">help_outline</span>`
-    : getImg(t.want.name, 52);
-  const wantBadge = t.want.rarity === 'Open'
-    ? `<span class="bg-[#23262c] text-gray-400 font-label text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-bold outline outline-1 outline-outline-variant/15">Open</span>`
-    : `<span class="font-label text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-bold badge-inner-glow" style="background:${t.want.color};color:${t.want.textColor||'white'}">${t.want.rarity}</span>`;
-  return `<article class="bg-[#1d2025] rounded-[1.5rem] p-5 outline outline-1 outline-outline-variant/15 hover:outline-outline-variant/40 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden flex flex-col gap-4 ${t.glow}">
-    <div class="flex items-center justify-between z-10 relative">
+// ===== MARKET =====
+function tradeCard(t){
+  const isOpen=t.want.name==='Any Offers'||t.want.name==='Any Neon';
+  const wantImg=isOpen?`<span class="material-symbols-outlined" style="font-size:36px;color:var(--on-surface-dim)">help_outline</span>`:getImg(t.want.name,56);
+  const wantBadge=isOpen?`<span class="rarity-badge" style="background:var(--surface-highest);color:var(--on-surface-dim)">Open</span>`:`<span class="rarity-badge" style="background:${t.want.color};color:${t.want.textColor||'white'}">${t.want.rarity}</span>`;
+  return`<article class="p-5 flex flex-col gap-4 transition-all hover:opacity-90" style="background:var(--surface-mid);border-radius:var(--card-radius);border:1px solid ${t.have.color}22">
+    <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-[#23262c] flex items-center justify-center text-sm font-bold text-white">${t.user[0]}</div>
-        <span class="font-body text-sm font-medium text-white">${t.user}</span>
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black" style="background:var(--surface-high);color:var(--primary)">${t.user[0]}</div>
+        <span class="text-sm font-bold" style="color:var(--on-surface)">${t.user}</span>
       </div>
-      <span class="font-headline font-bold text-lg tracking-tight" style="color:${t.valColor}">Val: ${t.val}</span>
+      <span class="font-headline font-black text-lg" style="color:${t.valColor}">Val: ${t.val}</span>
     </div>
-    <div class="grid grid-cols-2 gap-4 z-10 relative">
-      <div class="bg-black rounded-DEFAULT p-3 flex flex-col items-center gap-3 relative overflow-hidden outline outline-1 outline-outline-variant/10">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,${t.have.color}22,transparent_70%)]"></div>
-        <span class="text-gray-400 font-label text-[10px] uppercase tracking-widest font-bold">HAVE</span>
-        <div class="w-20 h-20 flex items-center justify-center" style="filter:drop-shadow(0 0 12px ${t.have.color}88)">
-          ${getImg(t.have.name, 60)}
-        </div>
-        <div class="flex flex-col items-center gap-1">
-          <span class="font-headline font-bold text-sm text-center text-white line-clamp-1">${t.have.name}</span>
-          <span class="font-label text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-bold badge-inner-glow" style="background:${t.have.color};color:${t.have.textColor||'white'}">${t.have.rarity}</span>
-        </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div class="p-3 flex flex-col items-center gap-2 relative overflow-hidden" style="background:var(--surface-low);border-radius:var(--card-radius);border-left:3px solid ${t.have.color}">
+        <span class="text-xs font-black uppercase tracking-widest" style="color:var(--on-surface-dim)">HAVE</span>
+        <div style="filter:drop-shadow(0 0 10px ${t.have.color}66)">${getImg(t.have.name,56)}</div>
+        <span class="text-sm font-bold text-center" style="color:var(--on-surface)">${t.have.name}</span>
+        <span class="rarity-badge" style="background:${t.have.color};color:${t.have.textColor||'white'}">${t.have.rarity}</span>
       </div>
-      <div class="bg-black rounded-DEFAULT p-3 flex flex-col items-center gap-3 relative overflow-hidden outline outline-1 outline-outline-variant/10">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,${t.want.color}22,transparent_70%)]"></div>
-        <span class="text-gray-400 font-label text-[10px] uppercase tracking-widest font-bold">WANT</span>
-        <div class="w-20 h-20 flex items-center justify-center">${wantImg}</div>
-        <div class="flex flex-col items-center gap-1">
-          <span class="font-headline font-bold text-sm text-center text-white line-clamp-1">${t.want.name}</span>
-          ${wantBadge}
-        </div>
+      <div class="p-3 flex flex-col items-center gap-2 relative overflow-hidden" style="background:var(--surface-low);border-radius:var(--card-radius);border-left:3px solid ${t.want.color}">
+        <span class="text-xs font-black uppercase tracking-widest" style="color:var(--on-surface-dim)">WANT</span>
+        <div>${wantImg}</div>
+        <span class="text-sm font-bold text-center" style="color:var(--on-surface)">${t.want.name}</span>
+        ${wantBadge}
       </div>
     </div>
-    <button class="w-full py-2.5 rounded-DEFAULT bg-[#23262c] text-[#5cb8fd] font-label text-sm font-bold hover:bg-[#292c32] transition-colors z-10 border border-[#46484d]/30">OFFER TRADE</button>
+    <button class="btn-secondary w-full text-center">OFFER TRADE</button>
   </article>`;
 }
-
-function renderMarket() {
-  const trades = GAMES[currentGame].trades;
-  document.getElementById('market-cards').innerHTML = trades.map(tradeCard).join('');
-}
+function renderMarket(){document.getElementById('market-cards').innerHTML=GAMES[currentGame].trades.map(tradeCard).join('');}
 
 // ===== EVALUATOR =====
-function itemRow(item) {
-  return `<div class="relative p-4 rounded-xl bg-surface-container-highest outline outline-1 outline-outline-variant/15 flex items-center gap-4 group hover:scale-[1.02] transition-transform overflow-hidden">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_left,${item.rarityColor}_0%,transparent_50%)] opacity-5"></div>
-    <div class="w-14 h-14 rounded-lg bg-surface-container-lowest flex items-center justify-center shrink-0 border outline outline-1 shadow-[0_0_15px_${item.rarityColor}44]" style="border-color:${item.rarityColor}66">
-      ${getImg(item.name, 44)}
-    </div>
+function itemRow(item){
+  return`<div class="p-4 flex items-center gap-4 relative overflow-hidden transition-transform hover:scale-[1.01]" style="background:var(--surface-high);border-radius:var(--card-radius);border-left:3px solid ${item.rarityColor}">
+    <div class="w-14 h-14 flex items-center justify-center shrink-0" style="background:var(--surface-low);border-radius:var(--card-radius)">${getImg(item.name,44)}</div>
     <div class="flex-1 min-w-0">
-      <span class="inline-block px-2 py-0.5 rounded-full font-label text-[10px] font-bold tracking-widest uppercase shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] mb-1" style="background:${item.rarityColor};color:${item.rarityText||'white'}">${item.rarity}</span>
-      <h3 class="font-headline font-bold text-base text-on-surface truncate">${item.name}</h3>
+      <span class="rarity-badge inline-block mb-1" style="background:${item.rarityColor};color:${item.rarityText||'white'}">${item.rarity}</span>
+      <h3 class="font-headline font-black text-base truncate" style="color:var(--on-surface)">${item.name}</h3>
     </div>
     <div class="text-right">
-      <p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mb-1">Value</p>
-      <p class="font-headline font-bold text-xl text-primary">${item.value}</p>
+      <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:var(--on-surface-dim)">Value</p>
+      <p class="font-headline font-black text-xl" style="color:var(--primary)">${item.value}</p>
     </div>
   </div>`;
 }
-
-function renderEvaluator() {
-  const g = GAMES[currentGame];
-  document.getElementById('you-give-items').innerHTML = g.items.you.map(itemRow).join('') +
-    `<div class="p-4 rounded-xl bg-surface-container-lowest outline outline-1 outline-dashed outline-outline-variant/30 flex items-center justify-center gap-2 h-16 opacity-50 cursor-pointer hover:opacity-70 transition-opacity">
-      <span class="material-symbols-outlined text-on-surface-variant text-base">add</span>
-      <span class="font-body text-sm text-on-surface-variant">Add Item</span>
-    </div>`;
-  document.getElementById('they-give-items').innerHTML = g.items.they.map(itemRow).join('') +
-    `<div class="p-4 rounded-xl bg-surface-container-lowest outline outline-1 outline-dashed outline-outline-variant/30 flex items-center justify-center gap-2 h-16 opacity-50 cursor-pointer hover:opacity-70 transition-opacity">
-      <span class="material-symbols-outlined text-on-surface-variant text-base">add</span>
-      <span class="font-body text-sm text-on-surface-variant">Add Item</span>
-    </div>`;
+function renderEvaluator(){
+  const g=GAMES[currentGame];
+  const addSlot=`<div class="p-4 flex items-center justify-center gap-2 h-16 opacity-50 cursor-pointer transition-opacity hover:opacity-70" style="background:var(--surface-low);border-radius:var(--card-radius);border:1px dashed var(--on-surface-muted)"><span class="material-symbols-outlined" style="color:var(--on-surface-dim)">add</span><span class="text-sm" style="color:var(--on-surface-dim)">Add Item</span></div>`;
+  document.getElementById('you-give-items').innerHTML=g.items.you.map(itemRow).join('')+addSlot;
+  document.getElementById('they-give-items').innerHTML=g.items.they.map(itemRow).join('')+addSlot;
   document.getElementById('verdict-area').classList.add('hidden');
-  if(document.getElementById('combo-pills')) renderComboPills();
+  document.getElementById('verdict-area').style.display='none';
+  if(document.getElementById('combo-pills'))renderComboPills();
 }
-
-// ===== TRADE COMBOS PER GAME =====
-const COMBOS = {
-  blox: [
-    { label:'Spirit + Venom → 2x Mastery', you:['Spirit Fruit','Venom Fruit'], they:['2x Mastery'] },
-    { label:'Spirit Fruit → Dragon Fruit', you:['Spirit Fruit'], they:['Dragon Fruit'] },
-    { label:'Spirit Fruit → Dough Fruit', you:['Spirit Fruit'], they:['Dough Fruit'] },
-    { label:'Venom Fruit → Buddha Fruit', you:['Venom Fruit'], they:['Buddha Fruit'] },
-    { label:'Venom Fruit → Portal Fruit', you:['Venom Fruit'], they:['Portal Fruit'] },
-    { label:'Dragon ↔ Leopard', you:['Dragon Fruit'], they:['Leopard Fruit'] },
-  ],
-  adopt: [
-    { label:'Shadow + Frost → Bat Dragon', you:['Shadow Dragon','Frost Dragon'], they:['Bat Dragon'] },
-    { label:'Shadow Dragon → Bat Dragon', you:['Shadow Dragon'], they:['Bat Dragon'] },
-    { label:'Shadow → Frost Dragon', you:['Shadow Dragon'], they:['Frost Dragon'] },
-    { label:'Frost Dragon → Bat Dragon', you:['Frost Dragon'], they:['Bat Dragon'] },
-    { label:'Evil Unicorn ↔ Parrot', you:['Evil Unicorn'], they:['Parrot'] },
-    { label:'Frost Dragon → Parrot', you:['Frost Dragon'], they:['Parrot'] },
-  ],
-  brainrot: [
-    { label:'Tralalero + Brr Brr → Bombardiro', you:['Tralalero Tralala','Brr Brr Patapim'], they:['Bombardiro Crocodilo'] },
-    { label:'Tralalero → Bombardiro', you:['Tralalero Tralala'], they:['Bombardiro Crocodilo'] },
-    { label:'Tralalero → Tung Tung Tung', you:['Tralalero Tralala'], they:['Tung Tung Tung Sahur'] },
-    { label:'Brr Brr → Capuccino', you:['Brr Brr Patapim'], they:['Capuccino Assassino'] },
-    { label:'Capuccino ↔ Lirilì Larilà', you:['Capuccino Assassino'], they:['Lirilì Larilà'] },
-    { label:'Tung Tung → Brr Brr', you:['Tung Tung Tung Sahur'], they:['Brr Brr Patapim'] },
-  ],
-  pokemon: [
-    { label:'Shiny Charizard + Gengar → Mewtwo', you:['Shiny Charizard','Gengar'], they:['Mewtwo'] },
-    { label:'Shiny Charizard ↔ Mewtwo', you:['Shiny Charizard'], they:['Mewtwo'] },
-    { label:'Shiny Charizard → Vaporeon', you:['Shiny Charizard'], they:['Vaporeon'] },
-    { label:'Gengar ↔ Vaporeon', you:['Gengar'], they:['Vaporeon'] },
-    { label:'Gengar → Magikarp', you:['Gengar'], they:['Magikarp'] },
-    { label:'Magikarp → Gyarados', you:['Magikarp'], they:['Gyarados'] },
-  ]
-};
-
-// All items pool per game for combo lookup
-const ALL_ITEMS = {
-  blox: [
-    { name:'Spirit Fruit', rarity:'Mythical', rarityColor:'#E74C3C', value:'12.5M', emoji:'🍎' },
-    { name:'Venom Fruit', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'9.0M', emoji:'🍇' },
-    { name:'2x Mastery', rarity:'Gamepass', rarityColor:'#9B59B6', value:'22.0M', emoji:'⭐' },
-    { name:'Dragon Fruit', rarity:'Mythical', rarityColor:'#E74C3C', value:'20.0M', emoji:'🐉' },
-    { name:'Leopard Fruit', rarity:'Mythical', rarityColor:'#E74C3C', value:'20.0M', emoji:'🐆' },
-    { name:'Dough Fruit', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'15.0M', emoji:'🍩' },
-    { name:'Buddha Fruit', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'5.0M', emoji:'☸️' },
-    { name:'Portal Fruit', rarity:'Epic', rarityColor:'#9B59B6', value:'3.5M', emoji:'🌀' },
-  ],
-  adopt: [
-    { name:'Shadow Dragon', rarity:'Legendary', rarityColor:'#9B59B6', value:'12,000', emoji:'🐉' },
-    { name:'Frost Dragon', rarity:'Legendary', rarityColor:'#3498DB', value:'8,000', emoji:'❄️' },
-    { name:'Bat Dragon', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'20,000', emoji:'🦇' },
-    { name:'Evil Unicorn', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'3,500', emoji:'🦄' },
-    { name:'Parrot', rarity:'Legendary', rarityColor:'#E74C3C', value:'4,000', emoji:'🦜' },
-  ],
-  brainrot: [
-    { name:'Tralalero Tralala', rarity:'Mythical', rarityColor:'#E74C3C', value:'9,500', emoji:'🐟' },
-    { name:'Brr Brr Patapim', rarity:'Rare', rarityColor:'#3498DB', value:'2,200', emoji:'🌀' },
-    { name:'Bombardiro Crocodilo', rarity:'Mythical', rarityColor:'#E74C3C', value:'11,000', emoji:'🐊' },
-    { name:'Tung Tung Tung Sahur', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'5,000', emoji:'🥁' },
-    { name:'Capuccino Assassino', rarity:'Epic', rarityColor:'#9B59B6', value:'1,000', emoji:'☕' },
-    { name:'Lirilì Larilà', rarity:'Rare', rarityColor:'#3498DB', value:'1,000', emoji:'🌵' },
-  ],
-  pokemon: [
-    { name:'Shiny Charizard', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'Tier S', emoji:'🔥' },
-    { name:'Gengar', rarity:'Rare', rarityColor:'#9B59B6', value:'Tier B', emoji:'👻' },
-    { name:'Mewtwo', rarity:'Legendary', rarityColor:'#F1C40F', rarityText:'black', value:'Tier S', emoji:'🧬' },
-    { name:'Vaporeon', rarity:'Rare', rarityColor:'#3498DB', value:'Tier A-', emoji:'💧' },
-    { name:'Magikarp', rarity:'Common', rarityColor:'#808080', value:'Tier F', emoji:'🐟' },
-    { name:'Gyarados', rarity:'Rare', rarityColor:'#3498DB', value:'Tier B', emoji:'🌊' },
-  ]
-};
-
-function loadCombo(youNames, theyNames) {
-  const pool = ALL_ITEMS[currentGame];
-  GAMES[currentGame].items.you = youNames.map(n => pool.find(i => i.name === n)).filter(Boolean);
-  GAMES[currentGame].items.they = theyNames.map(n => pool.find(i => i.name === n)).filter(Boolean);
-  renderEvaluator();
-  renderComboPills();
-  document.getElementById('verdict-area').classList.add('hidden');
-}
-
-function renderComboPills() {
-  const combos = COMBOS[currentGame] || [];
-  const current = GAMES[currentGame];
-  const currentYou = current.items.you.map(i=>i.name).join('+');
-  const currentThey = current.items.they.map(i=>i.name).join('+');
-  document.getElementById('combo-pills').innerHTML = combos.map((c, idx) => {
-    const isActive = c.you.join('+') === currentYou && c.they.join('+') === currentThey;
-    return `<button onclick="loadComboByIndex(${idx})"
-      class="px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-widest transition-all ${isActive ? 'game-pill-active' : 'game-pill'}"
-    >${c.label}</button>`;
+function renderComboPills(){
+  const combos=COMBOS[currentGame]||[];
+  const cur=GAMES[currentGame];
+  const cy=cur.items.you.map(i=>i.name).join('+');
+  const ct=cur.items.they.map(i=>i.name).join('+');
+  document.getElementById('combo-pills').innerHTML=combos.map((c,idx)=>{
+    const a=c.you.join('+')=== cy&&c.they.join('+')=== ct;
+    return`<button onclick="loadComboByIndex(${idx})" class="px-3 py-1.5 text-xs font-bold uppercase tracking-widest transition-all ${a?'combo-active':'combo-pill'}" style="border-radius:var(--radius-pill)">${c.label}</button>`;
   }).join('');
 }
-
-function loadComboByIndex(idx) {
-  const c = COMBOS[currentGame][idx];
-  if (!c) return;
-  loadCombo(c.you, c.they);
+function loadComboByIndex(idx){const c=COMBOS[currentGame][idx];if(!c)return;loadCombo(c.you,c.they);}
+function loadCombo(you,they){
+  const pool=ALL_ITEMS[currentGame];
+  GAMES[currentGame].items.you=you.map(n=>pool.find(i=>i.name===n)).filter(Boolean);
+  GAMES[currentGame].items.they=they.map(n=>pool.find(i=>i.name===n)).filter(Boolean);
+  renderEvaluator();
 }
-
-// Key format: "game|you_items|they_items" (item names joined by +)
-const VERDICTS = {
-  // ── BLOX FRUITS ──────────────────────────────────────────────
-  'blox|Spirit Fruit+Venom Fruit|2x Mastery': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: '+0.5M Profit (W)',
-    youVal: '21.5M', theyVal: '22.0M',
-    analysis: 'The current demand for Mastery gamepasses is high, balancing the raw value of the fruits. While technically slightly in your favor by raw numbers, the liquidity of a gamepass makes this a highly recommended trade.'
-  },
-  'blox|Spirit Fruit|Dragon Fruit': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: '-7.5M Loss (L)',
-    youVal: '12.5M', theyVal: '20.0M',
-    analysis: 'Dragon Fruit sits above Spirit Fruit in the current meta tier list. You\'re giving up significant value here — Dragon\'s combat utility commands a premium. Hold Spirit Fruit and trade up with additional items.'
-  },
-  'blox|Spirit Fruit|Dough Fruit': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: '-2.5M Loss (L)',
-    youVal: '12.5M', theyVal: '15.0M',
-    analysis: 'Dough Fruit is consistently valued higher due to its awakening potential. Spirit Fruit is solid but Dough\'s demand in the PvP scene keeps its price elevated. You\'d need to add at least a mid-tier fruit to make this fair.'
-  },
-  'blox|Venom Fruit|Buddha Fruit': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+4.0M Profit (W)',
-    youVal: '9.0M', theyVal: '5.0M',
-    analysis: 'Strong W. Venom Fruit is significantly more valuable than Buddha in the current market. Buddha is a grinder\'s fruit — widely available, low demand from traders. You\'re extracting real value on this deal.'
-  },
-  'blox|Venom Fruit|Portal Fruit': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+5.5M Profit (W)',
-    youVal: '9.0M', theyVal: '3.5M',
-    analysis: 'Massive W. Portal Fruit is an Epic tier item with limited PvP application. Venom\'s Legendary status and awakening capabilities put it well above. Only accept this if you\'re trying to offload Venom quickly.'
-  },
-  'blox|Dragon Fruit|Leopard Fruit': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: '±0 Even Trade',
-    youVal: '20.0M', theyVal: '20.0M',
-    analysis: 'Both fruits sit at the very top of the Mythical tier. Dragon and Leopard trade at near-identical values in most community lists. This is a preference trade — Dragon favors grinding, Leopard favors PvP. Take it if you need the switch.'
-  },
-  'blox|Dough Fruit|Spirit Fruit': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+2.5M Profit (W)',
-    youVal: '15.0M', theyVal: '12.5M',
-    analysis: 'Solid W. Dough commands a premium over Spirit in the current meta. If you\'re looking to diversify your inventory, this trade moves you toward more liquid assets.'
-  },
-  'blox|Portal Fruit|Buddha Fruit': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: '-1.5M Loss (L)',
-    youVal: '3.5M', theyVal: '5.0M',
-    analysis: 'Slight L. Buddha Fruit has higher demand due to its grinding utility — it\'s a staple for new-to-mid players and moves quickly. Portal Fruit is niche. Add a small item to even this out.'
-  },
-
-  // ── ADOPT ME ─────────────────────────────────────────────────
-  'adopt|Shadow Dragon+Frost Dragon|Bat Dragon': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: '±0 Even Trade',
-    youVal: '20,000', theyVal: '20,000',
-    analysis: 'Shadow Dragon and Frost Dragon together sit right at Bat Dragon\'s combined community value. All three are Halloween/event-limited legendaries with stable demand. This is a clean portfolio consolidation trade — go for it.'
-  },
-  'adopt|Shadow Dragon|Bat Dragon': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: '-8,000 Loss (L)',
-    youVal: '12,000', theyVal: '20,000',
-    analysis: 'Bat Dragon commands a significant premium over Shadow Dragon. It\'s rarer, older, and has stronger demand in the collector community. You\'d need to add a Frost Dragon or two high-tier pets to make this anywhere near fair.'
-  },
-  'adopt|Shadow Dragon|Frost Dragon': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+4,000 Profit (W)',
-    youVal: '12,000', theyVal: '8,000',
-    analysis: 'Clean W. Shadow Dragon holds a noticeably higher value than Frost Dragon in current trading circles. Shadow\'s darker aesthetic keeps demand high. Frost is great but can\'t match Shadow\'s ceiling price.'
-  },
-  'adopt|Frost Dragon|Bat Dragon': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: '-12,000 Loss (L)',
-    youVal: '8,000', theyVal: '20,000',
-    analysis: 'Hard L. Bat Dragon is one of the most valuable pets in the game — Frost Dragon alone doesn\'t come close. You\'re looking at needing 1-2 additional legendaries to get anywhere near fair value here.'
-  },
-  'adopt|Evil Unicorn|Parrot': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: '+500 Slight W',
-    youVal: '3,500', theyVal: '4,000',
-    analysis: 'Both are older limited-edition pets with stable collector value. Parrot edges out Evil Unicorn slightly in most value lists, putting this marginally in your favor. A solid trade if you prefer the Parrot\'s aesthetic.'
-  },
-  'adopt|Shadow Dragon|Evil Unicorn': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+8,500 Profit (W)',
-    youVal: '12,000', theyVal: '3,500',
-    analysis: 'Enormous W. Shadow Dragon dwarfs Evil Unicorn in every value metric. Only trade down like this if you need quick liquidity — Evil Unicorn moves faster due to lower price point, but you\'re losing serious long-term value.'
-  },
-  'adopt|Frost Dragon|Parrot': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+4,000 Profit (W)',
-    youVal: '8,000', theyVal: '4,000',
-    analysis: 'Strong W. Frost Dragon sits in a higher tier than Parrot despite both being event exclusives. Frost\'s higher base value and broader recognition in the community gives it a clear edge.'
-  },
-
-  // ── STEAL A BRAINROT ─────────────────────────────────────────
-  'brainrot|Tralalero Tralala+Brr Brr Patapim|Bombardiro Crocodilo': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: '+700 Slight W',
-    youVal: '11,700', theyVal: '11,000',
-    analysis: 'Tralalero Tralala plus Brr Brr Patapim just about equals Bombardiro Crocodilo\'s value. The Crocodilo has high demand right now due to meme virality, but combining two items to match it is a reasonable consolidation play. Slight edge in your favor.'
-  },
-  'brainrot|Tralalero Tralala|Bombardiro Crocodilo': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: '-1,500 Loss (L)',
-    youVal: '9,500', theyVal: '11,000',
-    analysis: 'Bombardiro Crocodilo is riding a wave of meme popularity right now which has inflated its price above Tralalero Tralala. The gap is real — add a Brr Brr Patapim or similar mid-tier to close it.'
-  },
-  'brainrot|Tralalero Tralala|Tung Tung Tung Sahur': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+4,500 Profit (W)',
-    youVal: '9,500', theyVal: '5,000',
-    analysis: 'Big W. Tralalero Tralala sits in the Mythical tier while Tung Tung Tung Sahur is Legendary — that gap in drop rarity is directly reflected in their market values. Don\'t let their similar meme energy fool you.'
-  },
-  'brainrot|Brr Brr Patapim|Capuccino Assassino': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+1,200 Profit (W)',
-    youVal: '2,200', theyVal: '1,000',
-    analysis: 'Solid W. Brr Brr Patapim is a higher rarity tier with stronger demand than Capuccino Assassino. The value gap is consistent across community lists. Good trade if you\'re looking to downsize your portfolio for quicker flips.'
-  },
-  'brainrot|Capuccino Assassino|Lirilì Larilà': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: '±0 Even Trade',
-    youVal: '1,000', theyVal: '1,000',
-    analysis: 'Both items sit at the same tier in most Steal a Brainrot value sheets. This is a pure preference swap — if you like Lirilì Larilà\'s design more, pull the trigger. No value edge either way.'
-  },
-  'brainrot|Tung Tung Tung Sahur|Brr Brr Patapim': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: '+2,800 Profit (W)',
-    youVal: '5,000', theyVal: '2,200',
-    analysis: 'Strong W. Tung Tung Tung Sahur is a Legendary with significantly higher drop difficulty than Brr Brr Patapim. The rarity gap is meaningful — you\'re giving away more than you\'re getting. Take it if you want liquidity.'
-  },
-  'brainrot|Bombardiro Crocodilo|Tralalero Tralala': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: '-1,500 Loss (L)',
-    youVal: '11,000', theyVal: '9,500',
-    analysis: 'Slight L. Bombardiro Crocodilo is currently priced above Tralalero Tralala due to its virality spike. Meme meta shifts fast though — if you think the hype cools, this could actually be a smart long-term flip.'
-  },
-
-  // ── POKÉMON ──────────────────────────────────────────────────
-  'pokemon|Shiny Charizard+Gengar|Mewtwo': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: 'Tier S + B = S Even',
-    youVal: 'Tier S + B', theyVal: 'Tier S',
-    analysis: 'Shiny Charizard alone nearly matches Mewtwo, and adding Gengar tips this slightly in the other trainer\'s favour. However, Shiny Charizard\'s collector demand often exceeds raw tier ratings. This trade is defensible — both sides have bragging rights.'
-  },
-  'pokemon|Shiny Charizard|Mewtwo': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: 'Tier S for Tier S',
-    youVal: 'Tier S', theyVal: 'Tier S',
-    analysis: 'Shiny Charizard and Mewtwo are both pinnacle Tier S Pokémon but for different reasons — Charizard wins on collector nostalgia and rarity, Mewtwo wins on competitive viability. This is a preference trade between equals. Pull the trigger if you need the switch.'
-  },
-  'pokemon|Shiny Charizard|Vaporeon': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: 'Tier S → Tier A (W)',
-    youVal: 'Tier S', theyVal: 'Tier A',
-    analysis: 'Clear W for you. Shiny Charizard is one of the most sought-after Pokémon in any trading context — its rarity and cultural cachet put it above Vaporeon by at least a full tier. Don\'t make this trade unless you have a very specific team comp need.'
-  },
-  'pokemon|Gengar|Vaporeon': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: 'Tier B ≈ Tier A-',
-    youVal: 'Tier B', theyVal: 'Tier A-',
-    analysis: 'Close call. Gengar\'s Ghost typing and competitive utility make it a staple, while Vaporeon\'s bulk and Water typing serve different needs. Community value lists have these within one sub-tier of each other. Fair if you need the type coverage.'
-  },
-  'pokemon|Gengar|Magikarp': {
-    label: 'VERDICT: W', labelColor: '#6bfe9c', profitLine: 'Tier B → Tier F (W)',
-    youVal: 'Tier B', theyVal: 'Tier F',
-    analysis: 'Absolute W. Magikarp is the most common Pokémon in the game with a base catch rate of 255/255. Gengar requires a Gastly evolution line and is significantly rarer. Unless this Magikarp is shiny, this trade is heavily in your favour.'
-  },
-  'pokemon|Mewtwo|Shiny Charizard': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: 'Tier S for Tier S',
-    youVal: 'Tier S', theyVal: 'Tier S',
-    analysis: 'Mirror of the Charizard/Mewtwo trade — both sit at Tier S for different audiences. Mewtwo dominates competitive play while Charizard dominates collector culture. Swap if your priorities have shifted.'
-  },
-  'pokemon|Vaporeon|Gengar': {
-    label: 'VERDICT: FAIR', labelColor: '#F1C40F', profitLine: 'Tier A- ≈ Tier B',
-    youVal: 'Tier A-', theyVal: 'Tier B',
-    analysis: 'Roughly even with a slight edge to you. Vaporeon\'s bulk and Water-type utility keeps its tier rating marginally above Gengar in most lists. Close enough that personal preference should be the deciding factor.'
-  },
-  'pokemon|Magikarp|Gyarados': {
-    label: 'VERDICT: L', labelColor: '#E74C3C', profitLine: 'Tier F → Tier B (L)',
-    youVal: 'Tier F', theyVal: 'Tier B',
-    analysis: 'L on paper, but remember — you can evolve Magikarp into Gyarados yourself with enough candies. If you\'re short on time or candy, trading up makes sense. If you have grinding capacity, evolve it yourself and keep full value.'
+function showVerdict(){
+  const g=GAMES[currentGame];
+  const yn=g.items.you.map(i=>i.name).join('+');
+  const tn=g.items.they.map(i=>i.name).join('+');
+  const key=`${currentGame}|${yn}|${tn}`;
+  const rkey=`${currentGame}|${tn}|${yn}`;
+  let v=VERDICTS[key]||VERDICTS[rkey];
+  if(!v){
+    const ys=g.items.you.map(i=>parseFloat(i.value.replace(/[^0-9.]/g,''))||0).reduce((a,b)=>a+b,0);
+    const ts=g.items.they.map(i=>parseFloat(i.value.replace(/[^0-9.]/g,''))||0).reduce((a,b)=>a+b,0);
+    const d=ts-ys,p=ys>0?Math.abs(d/ys*100).toFixed(0):0;
+    const iw=d>ys*.05,il=d<-(ys*.05);
+    v={label:iw?'VERDICT: W':il?'VERDICT: L':'VERDICT: FAIR',labelColor:iw?'#6bfe9c':il?'#E74C3C':'#F1C40F',profitLine:iw?`+${Math.abs(d).toLocaleString()} Profit (W)`:il?`-${Math.abs(d).toLocaleString()} Loss (L)`:'±0 Even Trade',youVal:ys>0?ys.toLocaleString():g.items.you.map(i=>i.value).join(' + '),theyVal:ts>0?ts.toLocaleString():g.items.they.map(i=>i.value).join(' + '),analysis:iw?`Based on community value lists, you\'re getting the better end of this deal by approximately ${p}%. The items you\'re receiving carry stronger demand right now.`:il?`You\'re giving up more than you\'re getting — roughly ${p}% below fair value. Consider adding another item or renegotiating.`:`This trade sits within the fair value range. Both sides are getting roughly equivalent market value. Pull the trigger if you need the swap.`};
   }
-};
-
-function showVerdict() {
-  const g = GAMES[currentGame];
-  const youNames = g.items.you.map(i => i.name).join('+');
-  const theyNames = g.items.they.map(i => i.name).join('+');
-  const key = `${currentGame}|${youNames}|${theyNames}`;
-  const reverseKey = `${currentGame}|${theyNames}|${youNames}`;
-
-  let v = VERDICTS[key] || VERDICTS[reverseKey];
-
-  // Fallback: compute generically if no preseeded verdict
-  if (!v) {
-    const youNums = g.items.you.map(i => parseFloat(i.value.replace(/[^0-9.]/g,''))||0);
-    const theyNums = g.items.they.map(i => parseFloat(i.value.replace(/[^0-9.]/g,''))||0);
-    const youSum = youNums.reduce((a,b)=>a+b,0);
-    const theySum = theyNums.reduce((a,b)=>a+b,0);
-    const diff = theySum - youSum;
-    const pct = youSum > 0 ? Math.abs(diff/youSum*100).toFixed(0) : 0;
-    const isW = diff > youSum * 0.05;
-    const isL = diff < -(youSum * 0.05);
-    v = {
-      label: isW ? 'VERDICT: W' : isL ? 'VERDICT: L' : 'VERDICT: FAIR',
-      labelColor: isW ? '#6bfe9c' : isL ? '#E74C3C' : '#F1C40F',
-      profitLine: isW ? `+${Math.abs(diff).toLocaleString()} Profit (W)` : isL ? `-${Math.abs(diff).toLocaleString()} Loss (L)` : '±0 Even Trade',
-      youVal: youSum > 0 ? youSum.toLocaleString() : g.items.you.map(i=>i.value).join(' + '),
-      theyVal: theySum > 0 ? theySum.toLocaleString() : g.items.they.map(i=>i.value).join(' + '),
-      analysis: isW
-        ? `Based on current community value lists, you\'re getting the better end of this deal by approximately ${pct}%. The items you\'re receiving carry stronger demand and resale value right now.`
-        : isL
-        ? `You\'re giving up more than you\'re getting — roughly ${pct}% below fair value based on current market data. Consider adding another item to your side or renegotiating.`
-        : `This trade sits within the fair value range. Both sides are getting roughly equivalent market value. Pull the trigger if you need the swap.`
-    };
-  }
-
-  // Render verdict label
-  const verdictEl = document.querySelector('#verdict-area .font-headline.font-black');
-  verdictEl.textContent = v.label;
-  verdictEl.style.color = v.labelColor;
-  verdictEl.style.textShadow = `0 0 10px ${v.labelColor}88`;
-
-  // Update glow border color
-  const verdictBox = document.querySelector('#verdict-area .border-2');
-  verdictBox.style.borderColor = v.labelColor;
-  verdictBox.style.boxShadow = `0 0 50px ${v.labelColor}99, inset 0 0 20px ${v.labelColor}33`;
-  const glowBlur = document.querySelector('#verdict-area .blur-\\[40px\\]');
-  if(glowBlur) glowBlur.style.background = v.labelColor;
-
-  document.querySelector('#verdict-area .text-primary.font-bold.mt-1').textContent = v.profitLine;
-  document.getElementById('you-total').textContent = v.youVal;
-  document.getElementById('they-total').textContent = v.theyVal;
-  document.getElementById('ai-analysis').innerHTML = `<strong class="text-on-surface font-bold">AI Analysis:</strong> ${v.analysis}`;
-
-  const area = document.getElementById('verdict-area');
+  document.getElementById('verdict-label').textContent=v.label;
+  document.getElementById('verdict-label').style.color=v.labelColor;
+  document.getElementById('verdict-profit').textContent=v.profitLine;
+  document.getElementById('verdict-profit').style.color=v.labelColor;
+  document.querySelector('.verdict-box').style.borderColor=v.labelColor;
+  document.querySelector('.verdict-box').style.boxShadow=`0 0 30px ${v.labelColor}44`;
+  document.getElementById('you-total').textContent=v.youVal;
+  document.getElementById('they-total').textContent=v.theyVal;
+  document.getElementById('ai-analysis').innerHTML=`<strong style="color:var(--on-surface)">AI Analysis:</strong> ${v.analysis}`;
+  const area=document.getElementById('verdict-area');
   area.classList.remove('hidden');
-  setTimeout(() => area.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+  area.style.display='flex';
+  setTimeout(()=>area.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 }
 
 // ===== RNG =====
-function setRngMode(mode) {
-  currentRngMode = mode;
-  document.getElementById('grind-mode').classList.toggle('hidden', mode !== 'grind');
-  document.getElementById('luck-mode').classList.toggle('hidden', mode !== 'luck');
-  document.getElementById('grind-tab').className = mode === 'grind' ? 'rng-tab-active px-5 py-2.5 rounded-full font-label text-sm font-bold transition-all' : 'rng-tab px-5 py-2.5 rounded-full font-label text-sm font-medium transition-all hover:text-on-surface';
-  document.getElementById('luck-tab').className = mode === 'luck' ? 'rng-tab-active px-5 py-2.5 rounded-full font-label text-sm font-bold transition-all' : 'rng-tab px-5 py-2.5 rounded-full font-label text-sm font-medium transition-all hover:text-on-surface';
-  if(mode === 'grind') {
-    document.getElementById('rng-title').textContent = 'RNG Calculator';
-    document.getElementById('rng-subtitle').textContent = 'Optimize your grinding strategy.';
-  } else {
-    document.getElementById('rng-title').textContent = 'Luck Calculator';
-    document.getElementById('rng-subtitle').textContent = 'Find out how lucky your drop really was.';
-    renderLuckChips();
-  }
+function setRngMode(mode){
+  currentRngMode=mode;
+  document.getElementById('grind-mode').classList.toggle('hidden',mode!=='grind');
+  document.getElementById('luck-mode').classList.toggle('hidden',mode!=='luck');
+  const ga=document.getElementById('grind-tab'),la=document.getElementById('luck-tab');
+  ga.classList.toggle('rng-tab-active',mode==='grind');ga.classList.toggle('rng-tab',mode!=='grind');
+  la.classList.toggle('rng-tab-active',mode==='luck');la.classList.toggle('rng-tab',mode!=='grind'||mode==='luck');
+  ga.style.background=mode==='grind'?'var(--primary)':'transparent';
+  ga.style.color=mode==='grind'?'var(--on-primary)':'var(--on-surface-dim)';
+  la.style.background=mode==='luck'?'var(--primary)':'transparent';
+  la.style.color=mode==='luck'?'var(--on-primary)':'var(--on-surface-dim)';
+  if(mode==='grind'){document.getElementById('rng-title').textContent='RNG Calculator';document.getElementById('rng-subtitle').textContent='Optimize your grinding strategy.';}
+  else{document.getElementById('rng-title').textContent='Luck Calculator';document.getElementById('rng-subtitle').textContent='Find out how lucky your drop really was.';renderLuckChips();}
 }
-
-function renderGrindDefault() {
-  const g = GAMES[currentGame];
-  const firstItem = Object.keys(g.grindItems)[0];
-  if(firstItem) {
-    document.getElementById('grind-search').value = firstItem;
-    updateGrind(firstItem);
-  }
-}
-
-function updateGrind(name) {
-  const g = GAMES[currentGame].grindItems;
-  const item = g[name] || g[Object.keys(g)[0]];
-  if (!item) return;
-
-  document.getElementById('grind-item-name').textContent = name || Object.keys(GAMES[currentGame].grindItems)[0];
-  document.getElementById('grind-rate').textContent = item.rate;
-  document.getElementById('grind-attempts').textContent = item.attempts;
-  document.getElementById('grind-time').textContent = item.time;
-  document.getElementById('grind-verdict').textContent = item.verdict;
-
-  // Parse drop rate to decimal
-  const rate = parseFloat(item.rate) / 100;
-
-  // Build 7 attempt breakpoints from labels, treating last as the penultimate value (strip +)
-  const rawLabels = item.labels;
-  const attemptPoints = rawLabels.map(l => parseInt(l.replace(/[^0-9]/g, '')));
-
-  // Cumulative probability: P(at least 1 drop in n attempts) = 1 - (1-rate)^n
-  const probs = attemptPoints.map(n => 1 - Math.pow(1 - rate, n));
-
-  // Render bars
-  const barsEl = document.getElementById('prob-bars');
-  barsEl.innerHTML = probs.map((p, i) => {
-    const pct = Math.min(p * 100, 99.9);
-    const heightPct = Math.max(pct, 3); // min visible height
-    const label = rawLabels[i];
-    const attempts = attemptPoints[i];
-    const displayPct = pct < 1 ? pct.toFixed(2) : pct.toFixed(1);
-    // Is this the ~50% bar?
-    const is50 = i === probs.findIndex(p2 => p2 >= 0.5);
-    return `<div class="flex-1 flex flex-col items-center justify-end h-full relative group cursor-pointer z-10"
-      onclick="selectBar(${i}, ${attempts}, ${pct})"
-      data-attempts="${attempts}" data-pct="${displayPct}">
-      <div class="w-full rounded-t-sm transition-all duration-200 ${is50 ? 'bg-primary shadow-[0_0_12px_rgba(107,254,156,0.4)]' : 'bg-surface-container-highest hover:bg-[#3a3d45]'}"
-        style="height:${heightPct}%"
-        id="bar-${i}">
-      </div>
+function renderGrindDefault(){const g=GAMES[currentGame];const f=Object.keys(g.grindItems)[0];if(f){document.getElementById('grind-search').value=f;updateGrind(f);}}
+function updateGrind(name){
+  const g=GAMES[currentGame].grindItems;
+  const item=g[name]||g[Object.keys(g)[0]];
+  if(!item)return;
+  document.getElementById('grind-item-name').textContent=name;
+  document.getElementById('grind-rarity-badge').textContent=item.rarity+' Drop';
+  document.getElementById('grind-rarity-badge').className='rarity-badge text-white mt-1 inline-block '+item.rarityClass;
+  if(item.rarityColor==='#F1C40F')document.getElementById('grind-rarity-badge').style.color='#000';
+  document.getElementById('grind-rate').textContent=item.rate;
+  document.getElementById('grind-attempts').textContent=item.attempts;
+  document.getElementById('grind-time').textContent=item.time;
+  document.getElementById('grind-verdict').textContent=item.verdict;
+  const rate=parseFloat(item.rate)/100;
+  const pts=item.labels.map(l=>parseInt(l.replace(/[^0-9]/g,'')));
+  const probs=pts.map(n=>1-Math.pow(1-rate,n));
+  const i50=probs.findIndex(p=>p>=.5);
+  const bars=document.getElementById('prob-bars');
+  bars.innerHTML=probs.map((p,i)=>{
+    const h=Math.max(p*100,3);
+    const isActive=i===i50;
+    return`<div class="flex-1 flex flex-col items-center justify-end h-full relative cursor-pointer z-10" onclick="selectBar(${i},${pts[i]},${p*100})" style="height:100%">
+      <div class="w-full transition-all duration-200" id="bar-${i}" style="height:${h}%;border-radius:var(--radius-sm) var(--radius-sm) 0 0;background:${isActive?'var(--primary)':'var(--surface-bright)'}"></div>
     </div>`;
   }).join('');
-
-  // Render labels
-  document.getElementById('grind-chart-labels').innerHTML = rawLabels.map((l, i) => {
-    const is50 = i === probs.findIndex(p2 => p2 >= 0.5);
-    return `<span class="flex-1 text-center ${is50 ? 'text-primary font-bold' : ''}">${l}</span>`;
-  }).join('');
-
-  // Reset readout
-  const idx50 = probs.findIndex(p2 => p2 >= 0.5);
-  if (idx50 >= 0) selectBar(idx50, attemptPoints[idx50], (probs[idx50]*100));
-  else {
-    document.getElementById('readout-pct').textContent = '—';
-    document.getElementById('readout-label').textContent = 'click a bar to inspect';
-  }
+  document.getElementById('grind-chart-labels').innerHTML=item.labels.map((l,i)=>`<span class="flex-1 text-center" style="color:${i===i50?'var(--primary)':'var(--on-surface-dim)'};font-weight:${i===i50?700:400}">${l}</span>`).join('');
+  if(i50>=0)selectBar(i50,pts[i50],probs[i50]*100);
 }
-
-function selectBar(idx, attempts, pct) {
-  // Highlight selected bar
-  document.querySelectorAll('#prob-bars > div > div').forEach((b, i) => {
-    if (i === idx) {
-      b.classList.remove('bg-surface-container-highest', 'hover:bg-[#3a3d45]');
-      b.classList.add('bg-primary', 'shadow-[0_0_12px_rgba(107,254,156,0.4)]');
-    } else {
-      b.classList.remove('bg-primary', 'shadow-[0_0_12px_rgba(107,254,156,0.4)]');
-      b.classList.add('bg-surface-container-highest', 'hover:bg-[#3a3d45]');
-    }
-  });
-  // Update readout
-  const displayPct = pct < 1 ? pct.toFixed(2) : Math.round(pct);
-  document.getElementById('readout-pct').textContent = displayPct + '%';
-  document.getElementById('readout-label').textContent = `chance of drop within ${attempts.toLocaleString()} attempt${attempts === 1 ? '' : 's'}`;
-
-  // Also update the stats panel to reflect clicked bar
-  document.getElementById('grind-attempts').textContent = attempts.toLocaleString();
+function selectBar(idx,attempts,pct){
+  document.querySelectorAll('[id^="bar-"]').forEach((b,i)=>{b.style.background=i===idx?'var(--primary)':'var(--surface-bright)';});
+  const d=pct<1?pct.toFixed(2):Math.round(pct);
+  document.getElementById('readout-pct').textContent=d+'%';
+  document.getElementById('readout-label').textContent=`chance of drop within ${attempts.toLocaleString()} attempt${attempts===1?'':'s'}`;
+  document.getElementById('grind-attempts').textContent=attempts.toLocaleString();
 }
-
-function renderLuckChips() {
-  const items = GAMES[currentGame].grindItems;
-  const names = Object.keys(items);
-  const chips = document.getElementById('luck-item-chips');
-  if (!chips) return;
-  chips.innerHTML = names.map((n, i) => {
-    const item = items[n];
-    const colorMap = { Mythical:'#E74C3C', Legendary:'#F1C40F', Rare:'#3498DB', Uncommon:'#2ECC71', Common:'#808080' };
-    const col = colorMap[item.rarity] || '#808080';
-    const textCol = item.rarity === 'Legendary' ? 'black' : 'white';
-    return `<button onclick="selectLuckItem(${i})"
-      class="luck-chip px-2.5 py-1 rounded-full font-label text-[10px] font-bold uppercase tracking-widest transition-all border"
-      style="border-color:${col}66;color:${col};background:${col}18"
-      data-idx="${i}">${n}</button>`;
+function renderLuckChips(){
+  const items=GAMES[currentGame].grindItems;
+  const names=Object.keys(items);
+  const chips=document.getElementById('luck-item-chips');
+  if(!chips)return;
+  chips.innerHTML=names.map((n,i)=>{
+    const item=items[n];
+    return`<button onclick="selectLuckItem(${i})" class="luck-chip px-2.5 py-1 text-xs font-bold uppercase tracking-widest transition-all" data-idx="${i}" style="border-radius:var(--radius-pill);border:1px solid ${item.rarityColor}55;color:${item.rarityColor};background:${item.rarityColor}18">${n}</button>`;
   }).join('');
-  // Auto-select first
   selectLuckItem(0);
 }
-
-function selectLuckItem(idx) {
-  const items = GAMES[currentGame].grindItems;
-  const names = Object.keys(items);
-  const name = names[idx];
-  if (!name) return;
-  document.getElementById('luck-item').value = name;
-  document.querySelectorAll('.luck-chip').forEach((c, i) => {
-    c.style.opacity = i === idx ? '1' : '0.45';
-    c.style.fontWeight = i === idx ? '700' : '500';
-  });
+function selectLuckItem(idx){
+  const items=GAMES[currentGame].grindItems;const names=Object.keys(items);const name=names[idx];
+  if(!name)return;
+  document.getElementById('luck-item').value=name;
+  document.querySelectorAll('.luck-chip').forEach((c,i)=>{c.style.opacity=i===idx?'1':'.4';c.style.fontWeight=i===idx?'700':'500';});
+}
+function calcLuck(){
+  const itemName=document.getElementById('luck-item').value.trim();
+  const tries=parseInt(document.getElementById('luck-tries').value)||1;
+  const items=GAMES[currentGame].grindItems;
+  const matchKey=Object.keys(items).find(k=>k.toLowerCase().includes(itemName.toLowerCase()))||Object.keys(items)[0];
+  const item=items[matchKey];
+  const baseRate=parseFloat(item.rate)/100;
+  const odds=Math.round(1/baseRate);
+  const expected=1/baseRate;
+  const luckRatio=expected/tries;
+  const prob=1-Math.pow(1-baseRate,tries);
+  const topPct=(1-prob)*100;
+  const topStr=topPct<.1?'Top 0.1%':topPct<1?`Top ${topPct.toFixed(1)}%`:`Top ${Math.round(topPct)}%`;
+  const coinFlips=Math.max(1,Math.round(Math.log(baseRate)/Math.log(.5)));
+  let headline,rarityColor;
+  if(luckRatio>=5){headline='Insane Luck!';rarityColor='#F1C40F';}
+  else if(luckRatio>=2){headline='Super Lucky!';rarityColor='#6bfe9c';}
+  else if(luckRatio>=1){headline='Nice Pull!';rarityColor='#5cb8fd';}
+  else if(luckRatio>=.5){headline='Avg. Roll';rarityColor='#aaabb0';}
+  else{headline='No Luck...';rarityColor='#E74C3C';}
+  const badge=document.getElementById('luck-rarity-badge');
+  badge.textContent=item.rarity+' Drop';
+  badge.style.background=rarityColor;
+  badge.style.color=rarityColor==='#F1C40F'?'black':'white';
+  const hl=document.getElementById('luck-headline');
+  hl.textContent=headline;hl.style.color=rarityColor;hl.style.textShadow=`0 0 20px ${rarityColor}66`;
+  document.getElementById('luck-result').style.boxShadow=`0 0 40px 10px ${rarityColor}22`;
+  document.getElementById('luck-percentile').textContent=topStr;
+  document.getElementById('luck-odds').textContent='1 in '+odds.toLocaleString();
+  document.getElementById('luck-context').innerHTML=`<strong style="color:var(--secondary)">Context:</strong> Getting <strong style="color:${rarityColor}">${matchKey}</strong> in ${tries.toLocaleString()} tries (expected avg: ${Math.round(expected).toLocaleString()} attempts). Equivalent to flipping heads ${coinFlips} times in a row.`;
 }
 
-function calcLuck() {
-  const itemName = document.getElementById('luck-item').value.trim();
-  const tries = parseInt(document.getElementById('luck-tries').value) || 1;
-  const items = GAMES[currentGame].grindItems;
-
-  // Find matching item, fallback to first
-  const matchKey = Object.keys(items).find(k => k.toLowerCase().includes(itemName.toLowerCase())) || Object.keys(items)[0];
-  const item = items[matchKey];
-  const baseRate = parseFloat(item.rate) / 100;
-  const odds = Math.round(1 / baseRate);
-
-  // P(at least 1 in `tries` attempts)
-  const prob = 1 - Math.pow(1 - baseRate, tries);
-  const probPct = prob * 100;
-
-  // How lucky: compare tries to expected (1/rate)
-  const expected = 1 / baseRate;
-  const luckRatio = expected / tries; // >1 = lucky, <1 = unlucky
-
-  // Headline
-  let headline, rarityLabel, glowColor, textColor;
-  if (luckRatio >= 5) {
-    headline = 'Insane Luck!'; rarityLabel = item.rarity + ' Drop';
-    glowColor = 'rgba(241,196,15,0.15)'; textColor = '#F1C40F';
-  } else if (luckRatio >= 2) {
-    headline = 'Super Lucky!'; rarityLabel = item.rarity + ' Drop';
-    glowColor = 'rgba(107,254,156,0.15)'; textColor = '#6bfe9c';
-  } else if (luckRatio >= 1) {
-    headline = 'Nice Pull!'; rarityLabel = item.rarity + ' Drop';
-    glowColor = 'rgba(92,184,253,0.15)'; textColor = '#5cb8fd';
-  } else if (luckRatio >= 0.5) {
-    headline = 'Avg. Roll'; rarityLabel = item.rarity + ' Drop';
-    glowColor = 'rgba(170,171,176,0.15)'; textColor = '#aaabb0';
-  } else {
-    headline = 'No Luck...'; rarityLabel = item.rarity + ' Drop';
-    glowColor = 'rgba(231,76,60,0.15)'; textColor = '#E74C3C';
-  }
-
-  // Percentile: what % of players would NOT have gotten it yet
-  const topPct = ((1 - prob) * 100);
-  const topStr = topPct < 0.1 ? 'Top 0.1%' : topPct < 1 ? `Top ${topPct.toFixed(1)}%` : `Top ${Math.round(topPct)}%`;
-
-  // Coin flip equivalent
-  const coinFlips = baseRate > 0 ? Math.max(1, Math.round(Math.log(baseRate) / Math.log(0.5))) : 13;
-
-  // Update result card
-  const resultEl = document.getElementById('luck-result');
-  resultEl.style.boxShadow = `0 0 40px 10px ${glowColor}`;
-
-  const badge = document.getElementById('luck-rarity-badge');
-  badge.textContent = rarityLabel;
-  badge.style.background = textColor;
-  badge.style.color = (textColor === '#F1C40F') ? 'black' : 'white';
-
-  const headlineEl = document.getElementById('luck-headline');
-  headlineEl.textContent = headline;
-  headlineEl.style.color = textColor;
-  headlineEl.style.textShadow = `0 0 20px ${textColor}88`;
-
-  document.getElementById('luck-percentile').textContent = topStr;
-  document.getElementById('luck-odds').textContent = '1 in ' + odds.toLocaleString();
-  document.getElementById('luck-context').innerHTML =
-    `<strong class="text-secondary">Context:</strong> Getting <strong style="color:${textColor}">${matchKey}</strong> in ${tries.toLocaleString()} tries ` +
-    `(expected avg: ${Math.round(expected).toLocaleString()} attempts). ` +
-    `Equivalent to flipping heads ${coinFlips} times in a row.`;
-}
-
-document.getElementById('grind-search').addEventListener('input', function() {
-  const val = this.value;
-  const items = GAMES[currentGame].grindItems;
-  const match = Object.keys(items).find(k => k.toLowerCase().includes(val.toLowerCase()));
-  if(match) updateGrind(match);
+document.getElementById('grind-search').addEventListener('input',function(){
+  const v=this.value;const items=GAMES[currentGame].grindItems;
+  const m=Object.keys(items).find(k=>k.toLowerCase().includes(v.toLowerCase()));
+  if(m)updateGrind(m);
 });
 
 // ===== INIT =====
