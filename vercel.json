@@ -1,6 +1,7 @@
 {
-  "outputDirectory": ".",
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" }
+  "version": 2,
+  "public": true,
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
