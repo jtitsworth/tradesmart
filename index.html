@@ -1067,6 +1067,52 @@ document.addEventListener('DOMContentLoaded',()=>{
 setGame('blox');
 showPage('marketplace');
 
+// ── TRADERS DATA ──────────────────────────────────────────────────────────
+const GAME_LABELS = { blox:'Blox Fruits', adopt:'Adopt Me', brainrot:'Steal A Brainrot', pokemon:'Pokémon' };
+
+let TRADERS = [
+  { username:'SpeedTrader_X', game:'Blox Fruits',       stars:4.9, good:47, bad:1,  tags:['Fast Trader','Trustworthy','Rare Items'],  review:'Super fast and fair. Dragon Fruit in 2 minutes flat!'              },
+  { username:'FruitLord_X',   game:'Blox Fruits',       stars:4.8, good:33, bad:2,  tags:['Fast Trader','Rare Items','Trustworthy'],  review:'Always has the rarest fruits. Fastest trader I know.'              },
+  { username:'RareFruits99',  game:'Blox Fruits',       stars:4.5, good:22, bad:3,  tags:['Rare Items','Active'],                    review:'Huge inventory of rare fruits, reasonable prices.'                 },
+  { username:'TradeKing99',   game:'Blox Fruits',       stars:3.8, good:14, bad:8,  tags:['Fair Prices','Sometimes Slow'],           review:'Decent but inconsistent. Good prices when available.'              },
+  { username:'SlowJoe22',     game:'Blox Fruits',       stars:2.8, good:7,  bad:13, tags:['Slow Trader','Overpriced'],               review:'Takes 2+ hours to respond. Prices way above market.'               },
+  { username:'NinjaTrader',   game:'Blox Fruits',       stars:1.8, good:3,  bad:19, tags:['Scammer','Avoid'],                       review:'Tried to scam me twice. Avoid at all costs.'                       },
+  { username:'AdoptQueen',    game:'Adopt Me',          stars:4.8, good:38, bad:2,  tags:['Fair Prices','Active','Good Deals'],       review:'Best trader in Adopt Me. Always has what you need.'                },
+  { username:'PetQueen22',    game:'Adopt Me',          stars:4.6, good:31, bad:3,  tags:['Trustworthy','Fast Trader','Good Deals'], review:'One of the best Adopt Me traders. Quick and honest.'               },
+  { username:'LegitFlippr',   game:'Adopt Me',          stars:4.3, good:17, bad:4,  tags:['Good Deals','Active'],                   review:'Solid flipper with fair market prices. Reliable.'                  },
+  { username:'MistyWater',    game:'Adopt Me',          stars:3.5, good:11, bad:7,  tags:['Fair Prices'],                            review:'Mixed bag — good prices but slow to confirm.'                     },
+  { username:'AdoptKing7',    game:'Adopt Me',          stars:2.1, good:4,  bad:16, tags:['Overpriced','Avoid'],                    review:'Prices way above market. Refused to negotiate.'                    },
+  { username:'ShadowScamr',   game:'Adopt Me',          stars:1.2, good:1,  bad:25, tags:['Scammer','Avoid','Overpriced'],           review:'Absolute scammer. Changed terms mid-trade and bolted.'             },
+  { username:'TradePro99',    game:'Adopt Me',          stars:1.5, good:2,  bad:21, tags:['Scammer','Avoid'],                       review:'Took items and disappeared. Multiple reports of scamming.'          },
+  { username:'CapucinoFan',   game:'Steal A Brainrot',  stars:4.4, good:19, bad:3,  tags:['Fast Trader','Fair Prices'],             review:'Super reliable for mythical brainrots. Always fair.'               },
+  { username:'BrainGod99',    game:'Steal A Brainrot',  stars:4.7, good:28, bad:2,  tags:['Rare Items','Trustworthy','Active'],      review:'Has every rare brainrot. Legit every time.'                        },
+  { username:'BombaTrader',   game:'Steal A Brainrot',  stars:4.2, good:16, bad:4,  tags:['Good Deals','Active'],                   review:'Reliable and fast for brainrot trades.'                            },
+  { username:'BrainrotKing',  game:'Steal A Brainrot',  stars:4.3, good:18, bad:4,  tags:['Active','Good Deals'],                   review:'Solid trader, great prices on rare brainrots.'                     },
+  { username:'RNGHunter',     game:'Steal A Brainrot',  stars:3.6, good:12, bad:8,  tags:['Active','Inconsistent'],                 review:'Good when available but very hit or miss on timing.'               },
+  { username:'TungTung99',    game:'Steal A Brainrot',  stars:2.4, good:5,  bad:14, tags:['Overpriced','Slow Trader'],              review:'Way overpriced and ghosted me after agreeing on a deal.'           },
+  { username:'AshKetchum',    game:'Pokémon',           stars:4.7, good:26, bad:2,  tags:['Rare Items','Trustworthy','Fast Trader'], review:'The go-to for legendary Pokémon trades. Solid every time.'         },
+  { username:'PokeCollector', game:'Pokémon',           stars:4.9, good:29, bad:0,  tags:['Trustworthy','Fair Prices','Rare Items'], review:'Incredibly trustworthy. Has the rarest mons.'                      },
+  { username:'NekoTrader',    game:'Pokémon',           stars:4.6, good:24, bad:3,  tags:['Fair Prices','Fast Trader','Good Deals'], review:'Always fair and super responsive. Best Pokémon trader around.'     },
+  { username:'BrockRocks',    game:'Pokémon',           stars:3.2, good:8,  bad:9,  tags:['Inconsistent'],                          review:'Sometimes great deals, sometimes not worth it.'                    },
+  { username:'PokeScammer1',  game:'Pokémon',           stars:1.0, good:0,  bad:18, tags:['Scammer','Avoid'],                       review:'Sent wrong item, refused refund. Community blacklisted.'            },
+];
+
+function syncCommGame() {
+  const g = currentGame;
+  const label = GAME_LABELS[g] || g;
+  const icons = { blox:'⚓', adopt:'🐾', brainrot:'🧠', pokemon:'⚡' };
+  const hiddenInput = document.getElementById('comm-game');
+  const displayEl   = document.getElementById('comm-game-display');
+  const iconEl      = document.getElementById('comm-game-icon');
+  const labelEl     = document.getElementById('comm-game-label');
+  if (hiddenInput) hiddenInput.value = label;
+  if (iconEl)  iconEl.textContent  = icons[g] || '🎮';
+  if (labelEl) labelEl.textContent = label;
+  // Also sync the community filter dropdown to current game
+  const filter = document.getElementById('comm-filter');
+  if (filter) { filter.value = label; renderLeaderboard(); }
+}
+
 // ── GRIND SEARCH DROPDOWN ─────────────────────────────────────────────────
 function showGrindDrop(val) {
   const drop = document.getElementById('grind-drop');
@@ -1312,9 +1358,14 @@ function tradeCardWithRep(t) {
   const icon = trader ? getRepIcon(trader) : '';
   const html = _origTradeCard(t);
   // Inject icon after the username span
+  const color = trader ? getRepColor(trader) : 'transparent';
+  const total = trader ? (trader.good||0)+(trader.bad||0) : 0;
+  const tooltip = trader ? `${trader.good||0} positive, ${trader.bad||0} negative reviews` : '';
   return html.replace(
     `<span class="text-sm font-bold" style="color:var(--on-surface)">${t.user}</span>`,
-    `<span class="text-sm font-bold" style="color:var(--on-surface)">${t.user}</span>${icon ? `<span title="Community reputation" style="font-size:1rem;line-height:1">${icon}</span>` : ''}`
+    `<span class="text-sm font-bold" style="color:var(--on-surface)">${t.user}</span>` +
+    (icon ? `<span title="${tooltip}" style="font-size:1rem;line-height:1;cursor:help">${icon}</span>` +
+    (total ? `<span style="font-size:.65rem;font-weight:700;color:${color};background:${color}22;padding:1px 6px;border-radius:999px;cursor:help" title="${tooltip}">${trader.good||0}/${total}</span>` : '') : '')
   );
 }
 
@@ -1322,7 +1373,7 @@ function tradeCardWithRep(t) {
 const _origShowPage = showPage;
 showPage = function(p) {
   _origShowPage(p);
-  if (p === 'community') renderLeaderboard();
+  if (p === 'community') { syncCommGame(); renderLeaderboard(); }
   if (p === 'marketplace') renderMarketWithRep();
 };
 
@@ -1332,6 +1383,7 @@ function renderMarketWithRep() {
 }
 
 window.addEventListener('load', function() {
+  syncCommGame();
   renderLeaderboard();
   renderMarketWithRep();
 });
@@ -1357,12 +1409,11 @@ window.addEventListener('load', function() {
           </div>
           <div>
             <label class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color:var(--on-surface-dim)">Game</label>
-            <select id="comm-game" class="input-field" style="cursor:pointer">
-              <option value="Blox Fruits">Blox Fruits</option>
-              <option value="Adopt Me">Adopt Me</option>
-              <option value="Steal A Brainrot">Steal A Brainrot</option>
-              <option value="Pokemon">Pokémon</option>
-            </select>
+            <div id="comm-game-display" class="input-field" style="cursor:default;opacity:0.8;display:flex;align-items:center;gap:.5rem">
+              <span id="comm-game-icon"></span>
+              <span id="comm-game-label"></span>
+            </div>
+            <input type="hidden" id="comm-game"/>
           </div>
         </div>
 
@@ -1428,7 +1479,7 @@ window.addEventListener('load', function() {
         <option value="Blox Fruits">Blox Fruits</option>
         <option value="Adopt Me">Adopt Me</option>
         <option value="Steal A Brainrot">Steal A Brainrot</option>
-        <option value="Pokemon">Pokémon</option>
+        <option value="Pokémon">Pokémon</option>
       </select>
       <select id="comm-sort" class="text-xs font-bold px-3 py-1.5" onchange="renderLeaderboard()" style="background:var(--surface-high);color:var(--on-surface);border:1px solid var(--on-surface-muted);border-radius:var(--radius-pill);cursor:pointer">
         <option value="good">Most Positive</option>
