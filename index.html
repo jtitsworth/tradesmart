@@ -1086,7 +1086,6 @@ function showGrindDrop(val) {
     </div>`;
   }).join('');
   drop.style.display = 'block';
-  // pre-load images
   keys.forEach(k => {
     const url = GAMES[currentGame].grindItems[k]?.url;
     if (url && !IMG_CACHE[k] && !IMAGES[k]) {
@@ -1133,20 +1132,49 @@ function pickLuckItem(k) {
 
 // ── COMMUNITY ─────────────────────────────────────────────────────────────
 let commStars = 0;
-let commTags = [];
-let TRADERS = [
-  { username:'SpeedTrader_X', game:'Blox Fruits', stars:5, tags:['Fast Trader','Trustworthy','Rare Items'], review:'Super fast and fair. Got my Dragon Fruit trade done in 2 minutes!', recs:24, date:'2026-04-20' },
-  { username:'AdoptQueen',    game:'Adopt Me',    stars:5, tags:['Fair Prices','Active','Good Deals'],      review:'Best trader in Adopt Me. Always has what you need.',           recs:18, date:'2026-04-19' },
-  { username:'BrainrotKing',  game:'Steal A Brainrot', stars:4, tags:['Active','Good Deals'],               review:'Solid trader, great prices on rare brainrots.',               recs:11, date:'2026-04-18' },
-  { username:'PokeCollector', game:'Pokemon',     stars:5, tags:['Trustworthy','Fair Prices'],               review:'Incredibly trustworthy. Has the rarest mons.',                recs:9,  date:'2026-04-17' },
-  { username:'RareFruits99',  game:'Blox Fruits', stars:4, tags:['Rare Items','Active'],                    review:'Huge inventory of rare fruits, reasonable prices.',            recs:7,  date:'2026-04-16' },
-];
+let commTags  = [];
+let commExp   = null; // 'good' | 'neutral' | 'bad'
+
+function getRepIcon(trader) {
+  const total = (trader.good||0) + (trader.bad||0);
+  if (total === 0) return '😐';
+  const ratio = (trader.good||0) / total;
+  if (ratio >= 0.75) return '😊';
+  if (ratio >= 0.4)  return '😐';
+  return '😞';
+}
+
+function getRepColor(trader) {
+  const total = (trader.good||0) + (trader.bad||0);
+  if (total === 0) return '#F1C40F';
+  const ratio = (trader.good||0) / total;
+  if (ratio >= 0.75) return '#6bfe9c';
+  if (ratio >= 0.4)  return '#F1C40F';
+  return '#E74C3C';
+}
+
+function setExp(type) {
+  commExp = type;
+  const colors = { good:'#6bfe9c', neutral:'#F1C40F', bad:'#E74C3C' };
+  ['good','neutral','bad'].forEach(t => {
+    const btn = document.getElementById(`exp-${t}`);
+    if (!btn) return;
+    if (t === type) {
+      btn.style.background = colors[t] + '33';
+      btn.style.borderColor = colors[t];
+      btn.style.color = colors[t];
+    } else {
+      btn.style.background = 'var(--surface-high)';
+      btn.style.borderColor = 'var(--on-surface-muted)';
+      btn.style.color = 'var(--on-surface-dim)';
+    }
+  });
+}
 
 function setStars(n) {
   commStars = n;
-  const stars = document.querySelectorAll('.star-btn');
   const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#e03e6b';
-  stars.forEach((s, i) => s.style.color = i < n ? primary : '#ccc');
+  document.querySelectorAll('.star-btn').forEach((s,i) => s.style.color = i < n ? primary : '#ccc');
   const labels = ['','Poor','Fair','Good','Great','Excellent'];
   const lbl = document.getElementById('comm-star-label');
   if (lbl) lbl.textContent = labels[n] || 'Tap to rate';
@@ -1157,13 +1185,13 @@ function toggleTag(btn, tag) {
   const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#e03e6b';
   if (idx === -1) {
     commTags.push(tag);
-    btn.style.background = primary;
-    btn.style.color = '#fff';
+    btn.style.background  = primary;
+    btn.style.color       = '#fff';
     btn.style.borderColor = primary;
   } else {
     commTags.splice(idx, 1);
-    btn.style.background = 'var(--surface-high)';
-    btn.style.color = 'var(--on-surface-dim)';
+    btn.style.background  = 'var(--surface-high)';
+    btn.style.color       = 'var(--on-surface-dim)';
     btn.style.borderColor = 'var(--on-surface-muted)';
   }
 }
@@ -1172,111 +1200,164 @@ function submitRec() {
   const username = (document.getElementById('comm-username').value || '').trim();
   const game     = document.getElementById('comm-game').value;
   const review   = (document.getElementById('comm-review').value || '').trim();
-  if (!username) { alert('Please enter a username.'); return; }
+  if (!username)  { alert('Please enter a username.'); return; }
   if (!commStars) { alert('Please give a star rating.'); return; }
+  if (!commExp)   { alert('Please select your experience (positive / neutral / negative).'); return; }
 
-  // Check if trader already exists, add rec count
   const existing = TRADERS.find(t => t.username.toLowerCase() === username.toLowerCase() && t.game === game);
   if (existing) {
-    existing.recs = (existing.recs || 0) + 1;
-    existing.stars = Math.round((existing.stars + commStars) / 2);
+    if (commExp === 'good')    existing.good = (existing.good||0) + 1;
+    if (commExp === 'bad')     existing.bad  = (existing.bad||0)  + 1;
+    existing.stars = Math.round(((existing.stars * ((existing.good||0)+(existing.bad||0)-1)) + commStars) / ((existing.good||0)+(existing.bad||0)) * 10) / 10;
     if (commTags.length) existing.tags = [...new Set([...existing.tags, ...commTags])];
+    if (review) existing.review = review;
   } else {
     TRADERS.push({
       username, game, stars: commStars,
-      tags: [...commTags],
-      review: review || 'Recommended by the community.',
-      recs: 1,
+      good:  commExp === 'good'    ? 1 : 0,
+      bad:   commExp === 'bad'     ? 1 : 0,
+      tags:  [...commTags],
+      review: review || 'Community review.',
       date: new Date().toISOString().slice(0,10)
     });
   }
 
-  // Reset form
+  // Reset
   document.getElementById('comm-username').value = '';
-  document.getElementById('comm-review').value = '';
-  commStars = 0; commTags = [];
+  document.getElementById('comm-review').value   = '';
+  commStars = 0; commTags = []; commExp = null;
   document.querySelectorAll('.star-btn').forEach(s => s.style.color = '#ccc');
   document.querySelectorAll('.comm-tag').forEach(b => {
     b.style.background = 'var(--surface-high)';
-    b.style.color = 'var(--on-surface-dim)';
+    b.style.color       = 'var(--on-surface-dim)';
     b.style.borderColor = 'var(--on-surface-muted)';
   });
+  ['good','neutral','bad'].forEach(t => {
+    const btn = document.getElementById(`exp-${t}`);
+    if (btn) { btn.style.background='var(--surface-high)'; btn.style.borderColor='var(--on-surface-muted)'; btn.style.color='var(--on-surface-dim)'; }
+  });
   document.getElementById('comm-star-label').textContent = 'Tap to rate';
-
-  const success = document.getElementById('comm-success');
-  success.classList.remove('hidden');
-  setTimeout(() => success.classList.add('hidden'), 3000);
+  const s = document.getElementById('comm-success');
+  s.classList.remove('hidden');
+  setTimeout(() => s.classList.add('hidden'), 3000);
   renderLeaderboard();
 }
 
-function renderLeaderboard() {
-  const filter = (document.getElementById('comm-filter')?.value) || 'all';
-  const board  = document.getElementById('comm-leaderboard');
-  if (!board) return;
-  const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#e03e6b';
-
-  let list = filter === 'all' ? [...TRADERS] : TRADERS.filter(t => t.game === filter);
-  list.sort((a, b) => (b.recs||0) - (a.recs||0));
-
-  if (!list.length) {
-    board.innerHTML = '<div class="text-center py-8 text-sm" style="color:var(--on-surface-dim)">No traders found for this game yet.</div>';
-    return;
-  }
-
-  board.innerHTML = list.map((t, i) => {
-    const stars = '★'.repeat(t.stars) + '☆'.repeat(5 - t.stars);
-    const medal = i===0 ? '🥇' : i===1 ? '🥈' : i===2 ? '🥉' : `<span style="font-size:.8rem;font-weight:900;color:var(--on-surface-dim)">#${i+1}</span>`;
-    const tagHtml = (t.tags||[]).map(tag =>
-      `<span style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted);padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700">${tag}</span>`
-    ).join('');
-    return `<div class="p-4" style="background:var(--surface-low);border-radius:var(--card-radius);border:1px solid var(--on-surface-muted)">
-      <div class="flex items-start gap-3">
-        <div class="text-2xl flex-shrink-0 mt-0.5">${medal}</div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <div>
-              <span class="font-headline font-black text-base" style="color:var(--on-surface)">${t.username}</span>
-              <span class="text-xs ml-2 px-2 py-0.5 rounded-full" style="background:var(--surface-high);color:var(--on-surface-dim)">${t.game}</span>
-            </div>
-            <div class="flex items-center gap-2 flex-shrink-0">
-              <span style="color:${primary};font-size:.9rem;letter-spacing:1px">${stars}</span>
-              <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:${primary}22;color:${primary}">${t.recs} rec${t.recs!==1?'s':''}</span>
-            </div>
-          </div>
-          ${tagHtml ? `<div class="flex flex-wrap gap-1.5 mt-2">${tagHtml}</div>` : ''}
-          ${t.review ? `<p class="text-xs mt-2 italic" style="color:var(--on-surface-dim)">"${t.review}"</p>` : ''}
-        </div>
+function traderCard(t) {
+  const icon  = getRepIcon(t);
+  const color = getRepColor(t);
+  const total = (t.good||0) + (t.bad||0);
+  const stars = '★'.repeat(Math.round(t.stars||0)) + '☆'.repeat(5 - Math.round(t.stars||0));
+  const tagHtml = (t.tags||[]).slice(0,3).map(tag =>
+    `<span style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted);padding:1px 8px;border-radius:999px;font-size:.65rem;font-weight:700">${tag}</span>`
+  ).join('');
+  return `<div class="p-4" style="background:var(--surface-low);border-radius:var(--card-radius);border-left:3px solid ${color}">
+    <div class="flex items-start justify-between gap-2 mb-2">
+      <div class="flex items-center gap-2">
+        <span style="font-size:1.2rem">${icon}</span>
+        <span class="font-headline font-black text-sm" style="color:var(--on-surface)">${t.username}</span>
       </div>
-    </div>`;
-  }).join('');
+      <span class="text-xs px-2 py-0.5 rounded-full font-bold" style="background:var(--surface-high);color:var(--on-surface-dim);white-space:nowrap">${t.game}</span>
+    </div>
+    <div class="flex items-center gap-3 mb-2">
+      <span style="color:${color};font-size:.8rem;letter-spacing:1px">${stars}</span>
+      <span class="text-xs font-bold" style="color:${color}">${t.stars?.toFixed(1)||'?'}</span>
+    </div>
+    <div class="flex gap-3 mb-2 text-xs font-bold">
+      <span style="color:#6bfe9c">👍 ${t.good||0}</span>
+      <span style="color:#E74C3C">👎 ${t.bad||0}</span>
+      <span style="color:var(--on-surface-dim)">${total} reviews</span>
+    </div>
+    ${tagHtml ? `<div class="flex flex-wrap gap-1 mb-2">${tagHtml}</div>` : ''}
+    ${t.review ? `<p class="text-xs italic" style="color:var(--on-surface-dim)">"${t.review}"</p>` : ''}
+  </div>`;
 }
 
-// ── PATCH showPage to handle community ────────────────────────────────────
+function renderLeaderboard() {
+  const filter   = document.getElementById('comm-filter')?.value || 'all';
+  const sortBy   = document.getElementById('comm-sort')?.value   || 'good';
+  let list = filter === 'all' ? [...TRADERS] : TRADERS.filter(t => t.game === filter);
+
+  // Sort
+  list.sort((a,b) => {
+    if (sortBy === 'good')  return (b.good||0)  - (a.good||0);
+    if (sortBy === 'bad')   return (b.bad||0)   - (a.bad||0);
+    if (sortBy === 'total') return ((b.good||0)+(b.bad||0)) - ((a.good||0)+(a.bad||0));
+    if (sortBy === 'stars') return (b.stars||0) - (a.stars||0);
+    return 0;
+  });
+
+  // Split into 3 columns by rep
+  const good    = list.filter(t => getRepIcon(t) === '😊');
+  const mixed   = list.filter(t => getRepIcon(t) === '😐');
+  const bad     = list.filter(t => getRepIcon(t) === '😞');
+
+  const render = (id, items) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = items.length
+      ? items.map(traderCard).join('')
+      : '<div class="text-xs text-center py-4" style="color:var(--on-surface-dim)">None found.</div>';
+  };
+  render('col-good',  good);
+  render('col-mixed', mixed);
+  render('col-bad',   bad);
+}
+
+// ── MARKETPLACE REP ICON ──────────────────────────────────────────────────
+// Patch tradeCard to show rep icon next to username
+const _origTradeCard = tradeCard;
+function tradeCardWithRep(t) {
+  const trader = TRADERS.find(tr => tr.username === t.user);
+  const icon = trader ? getRepIcon(trader) : '';
+  const html = _origTradeCard(t);
+  // Inject icon after the username span
+  return html.replace(
+    `<span class="text-sm font-bold" style="color:var(--on-surface)">${t.user}</span>`,
+    `<span class="text-sm font-bold" style="color:var(--on-surface)">${t.user}</span>${icon ? `<span title="Community reputation" style="font-size:1rem;line-height:1">${icon}</span>` : ''}`
+  );
+}
+
+// ── PATCH showPage ─────────────────────────────────────────────────────────
 const _origShowPage = showPage;
 showPage = function(p) {
   _origShowPage(p);
   const cp = document.getElementById('community-page');
   if (cp) cp.classList.toggle('hidden', p !== 'community');
   if (p === 'community') renderLeaderboard();
+  if (p === 'marketplace') {
+    // Re-render market with rep icons
+    document.getElementById('market-cards').innerHTML =
+      (GAMES[currentGame].trades || []).map(tradeCardWithRep).join('');
+  }
 };
 
-// Init on load
 window.addEventListener('load', function() {
   renderLeaderboard();
+  // Also patch initial marketplace render
+  const origRenderMarket = window.renderMarket;
+  if (origRenderMarket) {
+    window.renderMarket = function() {
+      document.getElementById('market-cards').innerHTML =
+        (GAMES[currentGame].trades || []).map(tradeCardWithRep).join('');
+    };
+    window.renderMarket();
+  }
 });
-
 </script>
 
 <!-- ===== ITEM PICKER MODAL ===== -->
 <!-- ======== COMMUNITY PAGE ======== -->
 <div id="community-page" class="page hidden">
-  <div class="max-w-3xl mx-auto">
+  <div style="max-width:1100px;margin:0 auto">
     <div class="mb-6">
       <h1 class="font-headline text-3xl font-black mb-1" style="color:var(--on-surface)">Community</h1>
-      <p class="text-sm" style="color:var(--on-surface-dim)">Rate and recommend trusted traders in the community.</p>
+      <p class="text-sm" style="color:var(--on-surface-dim)">Rate and review traders. Help the community spot trusted sellers and avoid bad actors.</p>
     </div>
+
+    <!-- Review form -->
     <div class="p-5 mb-6" style="background:var(--surface-low);border-radius:var(--card-radius)">
-      <h2 class="font-headline text-lg font-black mb-4" style="color:var(--on-surface)">⭐ Recommend a Trader</h2>
+      <h2 class="font-headline text-lg font-black mb-4" style="color:var(--on-surface)">✍️ Review a Trader</h2>
       <div class="space-y-3">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
@@ -1293,20 +1374,46 @@ window.addEventListener('load', function() {
             </select>
           </div>
         </div>
+
+        <!-- Experience toggle -->
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest mb-2 block" style="color:var(--on-surface-dim)">Your Experience</label>
+          <div class="flex gap-2">
+            <button type="button" id="exp-good" onclick="setExp('good')"
+              class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-full transition-all"
+              style="background:var(--surface-high);color:var(--on-surface-dim);border:2px solid var(--on-surface-muted)">
+              😊 Positive
+            </button>
+            <button type="button" id="exp-neutral" onclick="setExp('neutral')"
+              class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-full transition-all"
+              style="background:var(--surface-high);color:var(--on-surface-dim);border:2px solid var(--on-surface-muted)">
+              😐 Neutral
+            </button>
+            <button type="button" id="exp-bad" onclick="setExp('bad')"
+              class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-full transition-all"
+              style="background:var(--surface-high);color:var(--on-surface-dim);border:2px solid var(--on-surface-muted)">
+              😞 Negative
+            </button>
+          </div>
+        </div>
+
         <div>
           <label class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color:var(--on-surface-dim)">Tags</label>
           <div class="flex flex-wrap gap-2" id="comm-tags">
-            <button type="button" onclick="toggleTag(this,'Fast Trader')" class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Fast Trader</button>
-            <button type="button" onclick="toggleTag(this,'Fair Prices')" class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Fair Prices</button>
-            <button type="button" onclick="toggleTag(this,'Trustworthy')" class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Trustworthy</button>
-            <button type="button" onclick="toggleTag(this,'Good Deals')" class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Good Deals</button>
-            <button type="button" onclick="toggleTag(this,'Active')" class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Active</button>
-            <button type="button" onclick="toggleTag(this,'Rare Items')" class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Rare Items</button>
+            <button type="button" onclick="toggleTag(this,'Fast Trader')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Fast Trader</button>
+            <button type="button" onclick="toggleTag(this,'Fair Prices')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Fair Prices</button>
+            <button type="button" onclick="toggleTag(this,'Trustworthy')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Trustworthy</button>
+            <button type="button" onclick="toggleTag(this,'Good Deals')"   class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Good Deals</button>
+            <button type="button" onclick="toggleTag(this,'Active')"       class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Active</button>
+            <button type="button" onclick="toggleTag(this,'Rare Items')"   class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Rare Items</button>
+            <button type="button" onclick="toggleTag(this,'Overpriced')"   class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Overpriced</button>
+            <button type="button" onclick="toggleTag(this,'Slow Trader')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Slow Trader</button>
+            <button type="button" onclick="toggleTag(this,'Scammer')"      class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Scammer</button>
           </div>
         </div>
         <div>
           <label class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color:var(--on-surface-dim)">Review (optional)</label>
-          <textarea id="comm-review" class="input-field" placeholder="Describe your experience trading with them..." rows="2" style="resize:none"></textarea>
+          <textarea id="comm-review" class="input-field" placeholder="Describe your experience..." rows="2" style="resize:none"></textarea>
         </div>
         <div class="flex items-center gap-3">
           <div id="comm-stars" class="flex gap-1">
@@ -1318,12 +1425,13 @@ window.addEventListener('load', function() {
           </div>
           <span class="text-xs" style="color:var(--on-surface-dim)" id="comm-star-label">Tap to rate</span>
         </div>
-        <button onclick="submitRec()" class="btn-primary w-full">SUBMIT RECOMMENDATION</button>
-        <div id="comm-success" class="hidden text-center py-2 text-sm font-bold" style="color:var(--secondary)">✓ Recommendation submitted!</div>
+        <button onclick="submitRec()" class="btn-primary w-full">SUBMIT REVIEW</button>
+        <div id="comm-success" class="hidden text-center py-2 text-sm font-bold" style="color:var(--secondary)">✓ Review submitted!</div>
       </div>
     </div>
-    <div class="mb-4 flex items-center justify-between">
-      <h2 class="font-headline text-lg font-black" style="color:var(--on-surface)">🏆 Top Traders</h2>
+
+    <!-- Sort + Filter bar -->
+    <div class="flex flex-wrap items-center gap-3 mb-4">
       <select id="comm-filter" class="text-xs font-bold px-3 py-1.5" onchange="renderLeaderboard()" style="background:var(--surface-high);color:var(--on-surface);border:1px solid var(--on-surface-muted);border-radius:var(--radius-pill);cursor:pointer">
         <option value="all">All Games</option>
         <option value="Blox Fruits">Blox Fruits</option>
@@ -1331,8 +1439,38 @@ window.addEventListener('load', function() {
         <option value="Steal A Brainrot">Steal A Brainrot</option>
         <option value="Pokemon">Pokémon</option>
       </select>
+      <select id="comm-sort" class="text-xs font-bold px-3 py-1.5" onchange="renderLeaderboard()" style="background:var(--surface-high);color:var(--on-surface);border:1px solid var(--on-surface-muted);border-radius:var(--radius-pill);cursor:pointer">
+        <option value="good">Most Positive</option>
+        <option value="bad">Most Negative</option>
+        <option value="total">Most Reviews</option>
+        <option value="stars">Avg Rating</option>
+      </select>
     </div>
-    <div id="comm-leaderboard" class="space-y-3"></div>
+
+    <!-- 3-column layout -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span style="font-size:1.3rem">😊</span>
+          <h3 class="font-headline font-black text-base" style="color:#6bfe9c">Trusted Traders</h3>
+        </div>
+        <div id="col-good" class="space-y-3"></div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span style="font-size:1.3rem">😐</span>
+          <h3 class="font-headline font-black text-base" style="color:#F1C40F">Mixed Reviews</h3>
+        </div>
+        <div id="col-mixed" class="space-y-3"></div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span style="font-size:1.3rem">😞</span>
+          <h3 class="font-headline font-black text-base" style="color:#E74C3C">Flagged / Avoid</h3>
+        </div>
+        <div id="col-bad" class="space-y-3"></div>
+      </div>
+    </div>
   </div>
 </div>
 
