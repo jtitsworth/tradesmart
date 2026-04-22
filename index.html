@@ -1520,105 +1520,6 @@ window.addEventListener('load', function() {
 });
 </script>
 
-<!-- ===== ITEM PICKER MODAL ===== -->
-        <!-- Experience toggle -->
-        <div>
-          <label class="text-xs font-bold uppercase tracking-widest mb-2 block" style="color:var(--on-surface-dim)">Your Experience</label>
-          <div class="flex gap-2">
-            <button type="button" id="exp-good" onclick="setExp('good')"
-              class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-full transition-all"
-              style="background:var(--surface-high);color:var(--on-surface-dim);border:2px solid var(--on-surface-muted)">
-              😊 Positive
-            </button>
-            <button type="button" id="exp-neutral" onclick="setExp('neutral')"
-              class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-full transition-all"
-              style="background:var(--surface-high);color:var(--on-surface-dim);border:2px solid var(--on-surface-muted)">
-              😐 Neutral
-            </button>
-            <button type="button" id="exp-bad" onclick="setExp('bad')"
-              class="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-full transition-all"
-              style="background:var(--surface-high);color:var(--on-surface-dim);border:2px solid var(--on-surface-muted)">
-              😞 Negative
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <label class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color:var(--on-surface-dim)">Tags</label>
-          <div class="flex flex-wrap gap-2" id="comm-tags">
-            <button type="button" onclick="toggleTag(this,'Fast Trader')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Fast Trader</button>
-            <button type="button" onclick="toggleTag(this,'Fair Prices')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Fair Prices</button>
-            <button type="button" onclick="toggleTag(this,'Trustworthy')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Trustworthy</button>
-            <button type="button" onclick="toggleTag(this,'Good Deals')"   class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Good Deals</button>
-            <button type="button" onclick="toggleTag(this,'Active')"       class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Active</button>
-            <button type="button" onclick="toggleTag(this,'Rare Items')"   class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Rare Items</button>
-            <button type="button" onclick="toggleTag(this,'Overpriced')"   class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Overpriced</button>
-            <button type="button" onclick="toggleTag(this,'Slow Trader')"  class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Slow Trader</button>
-            <button type="button" onclick="toggleTag(this,'Scammer')"      class="comm-tag px-3 py-1 text-xs font-bold rounded-full transition-all" style="background:var(--surface-high);color:var(--on-surface-dim);border:1px solid var(--on-surface-muted)">Scammer</button>
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color:var(--on-surface-dim)">Review (optional)</label>
-          <textarea id="comm-review" class="input-field" placeholder="Describe your experience..." rows="2" style="resize:none"></textarea>
-        </div>
-        <div class="flex items-center gap-3">
-          <div id="comm-stars" class="flex gap-1">
-            <span class="star-btn text-2xl cursor-pointer" onclick="setStars(1)" style="color:#ccc">★</span>
-            <span class="star-btn text-2xl cursor-pointer" onclick="setStars(2)" style="color:#ccc">★</span>
-            <span class="star-btn text-2xl cursor-pointer" onclick="setStars(3)" style="color:#ccc">★</span>
-            <span class="star-btn text-2xl cursor-pointer" onclick="setStars(4)" style="color:#ccc">★</span>
-            <span class="star-btn text-2xl cursor-pointer" onclick="setStars(5)" style="color:#ccc">★</span>
-          </div>
-          <span class="text-xs" style="color:var(--on-surface-dim)" id="comm-star-label">Tap to rate</span>
-        </div>
-        <button onclick="submitRec()" class="btn-primary w-full">SUBMIT REVIEW</button>
-        <div id="comm-success" class="hidden text-center py-2 text-sm font-bold" style="color:var(--secondary)">✓ Review submitted!</div>
-      </div>
-    </div>
-
-    <!-- Sort + Filter bar -->
-    <div class="flex flex-wrap items-center gap-3 mb-4">
-      <select id="comm-filter" class="text-xs font-bold px-3 py-1.5" onchange="renderLeaderboard()" style="background:var(--surface-high);color:var(--on-surface);border:1px solid var(--on-surface-muted);border-radius:var(--radius-pill);cursor:pointer">
-        <option value="all">All Games</option>
-        <option value="Blox Fruits">Blox Fruits</option>
-        <option value="Adopt Me">Adopt Me</option>
-        <option value="Steal A Brainrot">Steal A Brainrot</option>
-        <option value="Pokémon">Pokémon</option>
-      </select>
-      <select id="comm-sort" class="text-xs font-bold px-3 py-1.5" onchange="renderLeaderboard()" style="background:var(--surface-high);color:var(--on-surface);border:1px solid var(--on-surface-muted);border-radius:var(--radius-pill);cursor:pointer">
-        <option value="good">Most Positive</option>
-        <option value="bad">Most Negative</option>
-        <option value="total">Most Reviews</option>
-        <option value="stars">Avg Rating</option>
-      </select>
-    </div>
-
-    <!-- 3-column layout -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div>
-        <div class="flex items-center gap-2 mb-3">
-          <span style="font-size:1.3rem">😊</span>
-          <h3 class="font-headline font-black text-base" style="color:#6bfe9c">Trusted Traders</h3>
-        </div>
-        <div id="col-good" class="space-y-3"></div>
-      </div>
-      <div>
-        <div class="flex items-center gap-2 mb-3">
-          <span style="font-size:1.3rem">😐</span>
-          <h3 class="font-headline font-black text-base" style="color:#F1C40F">Mixed Reviews</h3>
-        </div>
-        <div id="col-mixed" class="space-y-3"></div>
-      </div>
-      <div>
-        <div class="flex items-center gap-2 mb-3">
-          <span style="font-size:1.3rem">😞</span>
-          <h3 class="font-headline font-black text-base" style="color:#E74C3C">Flagged / Avoid</h3>
-        </div>
-        <div id="col-bad" class="space-y-3"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div id="item-modal" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)" onclick="if(event.target===this)closeItemModal()">
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(520px,95vw);max-height:80vh;display:flex;flex-direction:column;background:var(--surface-mid);border-radius:var(--card-radius);border:1px solid var(--header-border);overflow:hidden">
@@ -1661,6 +1562,7 @@ window.addEventListener('load', function() {
     </div>
   </div>
 </div>
+
 
 </body>
 </html>
