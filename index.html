@@ -254,16 +254,10 @@ body{min-height:100dvh;font-family:var(--font-body);background:var(--bg);color:v
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="flex flex-col gap-4 p-5" style="background:var(--surface-low);border-radius:var(--card-radius)">
         <h2 class="font-headline font-black text-xl text-center uppercase" style="color:var(--on-surface)" id="you-give-label">You Give</h2>
-        <div class="relative">
-          <input class="input-field" placeholder="Search items..." type="text"/>
-        </div>
         <div class="flex flex-col gap-3" id="you-give-items"></div>
       </div>
       <div class="flex flex-col gap-4 p-5" style="background:var(--surface-low);border-radius:var(--card-radius)">
         <h2 class="font-headline font-black text-xl text-center uppercase" style="color:var(--on-surface)" id="they-give-label">They Give</h2>
-        <div class="relative">
-          <input class="input-field" placeholder="Search items..." type="text"/>
-        </div>
         <div class="flex flex-col gap-3" id="they-give-items"></div>
       </div>
     </div>
@@ -732,7 +726,7 @@ function itemRow(item){
 }
 function renderEvaluator(){
   const g=GAMES[currentGame];
-  const mkSlot=side=>`<div onclick="openItemModal('${side}')" class="p-4 flex items-center justify-center gap-2 h-16 opacity-60 cursor-pointer transition-opacity hover:opacity-100" style="background:var(--surface-low);border-radius:var(--card-radius);border:1px dashed var(--primary)44"><span class="material-symbols-outlined" style="color:var(--primary)">add_circle</span><span class="text-sm font-bold" style="color:var(--primary)">Add Item</span></div>`;
+  const mkSlot=side=>`<button onclick="openItemModal('${side}')" class="p-4 flex items-center justify-center gap-2 h-16 opacity-70 cursor-pointer transition-opacity hover:opacity-100 w-full" style="background:var(--surface-low);border-radius:var(--card-radius);border:1px dashed var(--primary);"><span class="material-symbols-outlined" style="color:var(--primary)">add_circle</span><span class="text-sm font-bold" style="color:var(--primary)">Add Item</span></button>`;
   const mkRemove=(item,side,idx)=>`<div class="p-4 flex items-center gap-4 relative overflow-hidden transition-transform hover:scale-[1.01]" style="background:var(--surface-high);border-radius:var(--card-radius);border-left:3px solid ${item.rarityColor||'var(--primary)'}">
     <div class="w-14 h-14 flex items-center justify-center shrink-0" style="background:var(--surface-low);border-radius:var(--card-radius)">${getImg(item.name,44)}</div>
     <div style="flex:1;min-width:0">
@@ -1022,7 +1016,40 @@ async function fetchAiStats(name, url){
   }
 }
 
-function confirmAddItem(){
+async function selectLuckItemFromDrop(name, url){
+  document.getElementById('luck-drop').style.display='none';
+  document.getElementById('luck-item').value=name;
+  // If it's in hardcoded grindItems, use that rate
+  const local=GAMES[currentGame].grindItems[name];
+  if(local) return; // calcLuck() will pick it up on button press
+  // Otherwise fetch from AI and cache into grindItems so calcLuck works
+  const OPENAI_API_KEY='PASTE_YOUR_OPENAI_KEY_HERE';
+  const gameNames={blox:'Blox Fruits',pokemon:'Pokémon',adopt:'Adopt Me',brainrot:'Steal A Brainrot'};
+  try{
+    const resp=await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+OPENAI_API_KEY},
+      body:JSON.stringify({
+        model:'gpt-4o-mini',max_tokens:150,temperature:0.7,
+        messages:[
+          {role:'system',content:'You are a Roblox game expert. Respond ONLY with valid JSON, no markdown.'},
+          {role:'user',content:`Drop rate for "${name}" in ${gameNames[currentGame]||currentGame}. Return ONLY:\n{"rate":"e.g. 1%","rarity":"Common|Uncommon|Rare|Epic|Legendary|Mythical","rarityClass":"bg-r-rare","rarityColor":"#3498DB"}`}
+        ]
+      })
+    });
+    const data=await resp.json();
+    let stats={};
+    try{stats=JSON.parse((data.choices?.[0]?.message?.content||'{}').replace(/```json|```/g,'').trim());}catch(e){}
+    GAMES[currentGame].grindItems[name]={
+      rate:stats.rate||'1%',attempts:'100',time:'Unknown',verdict:'AI estimated drop rate.',
+      rarity:stats.rarity||'Unknown',rarityClass:stats.rarityClass||'bg-r-common',
+      rarityColor:stats.rarityColor||'#808080',labels:['10','25','50','100','200','350','500+']
+    };
+  }catch(e){
+    // fall back to a generic entry so calcLuck doesn't break
+    GAMES[currentGame].grindItems[name]={rate:'1%',attempts:'100',time:'Unknown',verdict:'Unknown.',rarity:'Unknown',rarityClass:'bg-r-common',rarityColor:'#808080',labels:['10','25','50','100','200','350','500+']};
+  }
+}
   if(!_pendingItem)return;
   // Snapshot before closeAiCard nulls _pendingItem
   const snap=_pendingItem;
@@ -1044,53 +1071,61 @@ function confirmAddItem(){
   renderEvaluator();
 }
 
-// Also update the existing evaluator search inputs to open the modal
-document.addEventListener('DOMContentLoaded',()=>{
-  // Wire up the two search boxes in the evaluator to open the modal
-  const evalPage=document.getElementById('page-evaluator');
-  if(evalPage){
-    evalPage.querySelectorAll('input.input-field[placeholder="Search items..."]').forEach((inp,i)=>{
-      inp.addEventListener('focus',()=>openItemModal(i===0?'you':'they'));
-      inp.style.cursor='pointer';
-    });
-  }
-});
+// Evaluator search inputs are wired via renderEvaluator() directly
 
 // ===== RNG FULL CSV SEARCH =====
 // Override grind search to search full CSV and use AI for unlisted items
 let _rngDebounce=null;
 document.addEventListener('DOMContentLoaded',()=>{
   const gs=document.getElementById('grind-search');
-  if(!gs)return;
+  if(gs){
+    // Build grind autocomplete dropdown
+    const wrap=gs.parentElement;
+    wrap.style.position='relative';
+    const drop=document.createElement('div');
+    drop.id='grind-drop';
+    drop.style.cssText='display:none;position:absolute;top:100%;left:0;right:0;z-index:200;max-height:240px;overflow-y:auto;border-radius:var(--radius-md);background:var(--surface-high);box-shadow:0 8px 24px rgba(0,0,0,.4);margin-top:4px';
+    wrap.appendChild(drop);
 
-  // Build autocomplete dropdown
-  const wrap=gs.parentElement;
-  wrap.style.position='relative';
-  const drop=document.createElement('div');
-  drop.id='grind-drop';
-  drop.style.cssText='display:none;position:absolute;top:100%;left:0;right:0;z-index:200;max-height:240px;overflow-y:auto;border-radius:var(--radius-md);background:var(--surface-high);box-shadow:0 8px 24px rgba(0,0,0,.4);margin-top:4px';
-  wrap.appendChild(drop);
+    gs.addEventListener('input',function(){
+      clearTimeout(_rngDebounce);
+      const q=this.value.trim();
+      if(!q){drop.style.display='none';return;}
+      const pool=CSV_DB[currentGame]||[];
+      const lq=q.toLowerCase();
+      const matches=pool.filter(i=>i.name.toLowerCase().includes(lq)).slice(0,20);
+      if(!matches.length){drop.style.display='none';return;}
+      drop.innerHTML=matches.map(i=>`<div onclick="selectRngItem(${JSON.stringify(i.name)},${JSON.stringify(i.url)})" style="padding:.6rem 1rem;cursor:pointer;font-size:.9rem;color:var(--on-surface)" onmouseover="this.style.background='var(--surface-bright)'" onmouseout="this.style.background='transparent'">${i.name}</div>`).join('');
+      drop.style.display='block';
+      _rngDebounce=setTimeout(()=>{
+        const hasLocal=Object.keys(GAMES[currentGame].grindItems).some(k=>k.toLowerCase().includes(lq));
+        if(!hasLocal&&matches.length) selectRngItem(matches[0].name,matches[0].url);
+      },600);
+    });
+    document.addEventListener('click',e=>{if(!wrap.contains(e.target))drop.style.display='none';});
+  }
 
-  gs.addEventListener('input',function(){
-    clearTimeout(_rngDebounce);
-    const q=this.value.trim();
-    if(!q){drop.style.display='none';return;}
-    const pool=CSV_DB[currentGame]||[];
-    const lq=q.toLowerCase();
-    const matches=pool.filter(i=>i.name.toLowerCase().includes(lq)).slice(0,20);
-    if(!matches.length){drop.style.display='none';return;}
-    drop.innerHTML=matches.map(i=>`<div onclick="selectRngItem(${JSON.stringify(i.name)},${JSON.stringify(i.url)})" style="padding:.6rem 1rem;cursor:pointer;font-size:.9rem;color:var(--on-surface)" onmouseover="this.style.background='var(--surface-bright)'" onmouseout="this.style.background='transparent'">${i.name}</div>`).join('');
-    drop.style.display='block';
-    // debounced AI lookup if nothing matches grindItems
-    _rngDebounce=setTimeout(()=>{
-      const hasLocal=Object.keys(GAMES[currentGame].grindItems).some(k=>k.toLowerCase().includes(lq));
-      if(!hasLocal&&matches.length){
-        selectRngItem(matches[0].name,matches[0].url);
-      }
-    },600);
-  });
-
-  document.addEventListener('click',e=>{if(!wrap.contains(e.target))drop.style.display='none';});
+  // Build luck item autocomplete dropdown
+  const li=document.getElementById('luck-item');
+  if(li){
+    const lwrap=li.parentElement;
+    lwrap.style.position='relative';
+    const ldrop=document.createElement('div');
+    ldrop.id='luck-drop';
+    ldrop.style.cssText='display:none;position:absolute;top:100%;left:0;right:0;z-index:200;max-height:200px;overflow-y:auto;border-radius:var(--radius-md);background:var(--surface-high);box-shadow:0 8px 24px rgba(0,0,0,.4);margin-top:4px';
+    lwrap.appendChild(ldrop);
+    li.addEventListener('input',function(){
+      const q=this.value.trim();
+      if(!q){ldrop.style.display='none';return;}
+      const pool=CSV_DB[currentGame]||[];
+      const lq=q.toLowerCase();
+      const matches=pool.filter(i=>i.name.toLowerCase().includes(lq)).slice(0,20);
+      if(!matches.length){ldrop.style.display='none';return;}
+      ldrop.innerHTML=matches.map(i=>`<div onclick="selectLuckItemFromDrop(${JSON.stringify(i.name)},${JSON.stringify(i.url)})" style="padding:.6rem 1rem;cursor:pointer;font-size:.9rem;color:var(--on-surface)" onmouseover="this.style.background='var(--surface-bright)'" onmouseout="this.style.background='transparent'">${i.name}</div>`).join('');
+      ldrop.style.display='block';
+    });
+    document.addEventListener('click',e=>{if(!lwrap.contains(e.target))ldrop.style.display='none';});
+  }
 });
 
 async function selectRngItem(name,url){
