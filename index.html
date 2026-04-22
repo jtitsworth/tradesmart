@@ -1108,9 +1108,8 @@ function syncCommGame() {
   if (hiddenInput) hiddenInput.value = label;
   if (iconEl)  iconEl.textContent  = icons[g] || '🎮';
   if (labelEl) labelEl.textContent = label;
-  // Also sync the community filter dropdown to current game
-  const filter = document.getElementById('comm-filter');
-  if (filter) { filter.value = label; renderLeaderboard(); }
+  // Don't filter by game automatically — show all traders so columns aren't empty
+  renderLeaderboard();
 }
 
 // ── GRIND SEARCH DROPDOWN ─────────────────────────────────────────────────
@@ -1399,9 +1398,12 @@ window.addEventListener('load', function() {
     </div>
 
     <!-- Review form -->
-    <div class="p-5 mb-6" style="background:var(--surface-low);border-radius:var(--card-radius)">
-      <h2 class="font-headline text-lg font-black mb-4" style="color:var(--on-surface)">✍️ Review a Trader</h2>
-      <div class="space-y-3">
+    <details class="mb-6" style="background:var(--surface-low);border-radius:var(--card-radius)">
+      <summary class="p-5 font-headline text-lg font-black cursor-pointer select-none list-none flex items-center justify-between" style="color:var(--on-surface)">
+        <span>✍️ Review a Trader</span>
+        <span style="font-size:.8rem;font-weight:400;color:var(--on-surface-dim)">tap to expand ▾</span>
+      </summary>
+      <div class="px-5 pb-5 space-y-3">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color:var(--on-surface-dim)">Username</label>
@@ -1470,7 +1472,7 @@ window.addEventListener('load', function() {
         <button onclick="submitRec()" class="btn-primary w-full">SUBMIT REVIEW</button>
         <div id="comm-success" class="hidden text-center py-2 text-sm font-bold" style="color:var(--secondary)">✓ Review submitted!</div>
       </div>
-    </div>
+    </details>
 
     <!-- Sort + Filter bar -->
     <div class="flex flex-wrap items-center gap-3 mb-4">
