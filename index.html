@@ -1390,20 +1390,22 @@ window.addEventListener('load', function() {
 
 <!-- ===== ITEM PICKER MODAL ===== -->
 <!-- ======== COMMUNITY PAGE ======== -->
-<div id="page-community" class="page hidden">
-  <div style="max-width:1100px;margin:0 auto">
+<div id="page-community" class="page hidden flex-1 p-4 md:p-8 max-w-5xl mx-auto w-full gap-5">
+  <div>
     <div class="mb-6">
       <h1 class="font-headline text-3xl font-black mb-1" style="color:var(--on-surface)">Community</h1>
       <p class="text-sm" style="color:var(--on-surface-dim)">Rate and review traders. Help the community spot trusted sellers and avoid bad actors.</p>
     </div>
 
     <!-- Review form -->
-    <details class="mb-6" style="background:var(--surface-low);border-radius:var(--card-radius)">
-      <summary class="p-5 font-headline text-lg font-black cursor-pointer select-none list-none flex items-center justify-between" style="color:var(--on-surface)">
+    <div class="mb-6" style="background:var(--surface-low);border-radius:var(--card-radius)">
+      <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.arr').textContent=this.nextElementSibling.classList.contains('hidden')?'▾':'▴'"
+        class="w-full p-5 font-headline text-lg font-black flex items-center justify-between"
+        style="color:var(--on-surface);background:none;border:none;cursor:pointer;text-align:left">
         <span>✍️ Review a Trader</span>
-        <span style="font-size:.8rem;font-weight:400;color:var(--on-surface-dim)">tap to expand ▾</span>
-      </summary>
-      <div class="px-5 pb-5 space-y-3">
+        <span class="arr" style="font-size:.8rem;font-weight:400;color:var(--on-surface-dim)">▾</span>
+      </button>
+      <div class="hidden px-5 pb-5 space-y-3">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-xs font-bold uppercase tracking-widest mb-1 block" style="color:var(--on-surface-dim)">Username</label>
@@ -1472,7 +1474,7 @@ window.addEventListener('load', function() {
         <button onclick="submitRec()" class="btn-primary w-full">SUBMIT REVIEW</button>
         <div id="comm-success" class="hidden text-center py-2 text-sm font-bold" style="color:var(--secondary)">✓ Review submitted!</div>
       </div>
-    </details>
+    </div>
 
     <!-- Sort + Filter bar -->
     <div class="flex flex-wrap items-center gap-3 mb-4">
